@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/replay_artifact.schema.json",
+  "title": "ReplayArtifact",
+  "type": "object",
+  "required": [
+    "replay_id",
+    "trigger_kind",
+    "affected_refs",
+    "window",
+    "status"
+  ],
+  "properties": {
+    "replay_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trigger_kind": {
+      "enum": [
+        "LATE_EVENT",
+        "LATE_CONTEXT",
+        "POLICY_CHANGE",
+        "MANUAL_REPROCESS",
+        "MATERIALIZATION_REFRESH"
+      ]
+    },
+    "affected_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "window": {
+      "type": "object",
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": [
+        "QUEUED",
+        "RUNNING",
+        "COMPLETE",
+        "FAILED",
+        "PARTIAL"
+      ]
+    },
+    "primary_vs_replay": {
+      "enum": [
+        "PRIMARY",
+        "REPLAY"
+      ]
+    },
+    "root_cause": {
+      "type": "string"
+    },
+    "output_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

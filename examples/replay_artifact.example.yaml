@@ -1,0 +1,14 @@
+replay_id: rp-001
+trigger_kind: LATE_CONTEXT
+affected_refs:
+- cell-user-dept-001
+- sp-001
+- alert-7781
+window:
+  start: '2026-03-10T00:00:00Z'
+  end: '2026-03-11T12:00:00Z'
+status: QUEUED
+primary_vs_replay: REPLAY
+root_cause: user department context arrived after first-pass detection evaluation
+output_refs: []
+started_at: '2026-03-11T12:14:00Z'

@@ -1,0 +1,41 @@
+cell_id: cell-artifact-file-001
+object_kind: SECURITY_CONTEXT_RECORD
+schema_version: 1.0.0
+semantic_version: '2026.03'
+plane: GLOBAL
+truth_class: REPUTED
+time_model: SNAPSHOT
+merge_model: FIRST_MATCH
+scope: GLOBAL
+surface_visibility:
+- SEARCH
+- RULES
+- DASHBOARDS
+source:
+  source_type: GLOBAL_CONTEXT
+  vendor_name: Google SecOps
+  product_name: GTI
+  feed_family: FILE_REPUTATION
+validity:
+  observed_at: '2026-03-10T15:30:00Z'
+provenance:
+  source_refs:
+  - gti:file:sha256:abc
+  hashes:
+  - sha256:gti-file-001
+payload:
+  global:
+    file:
+      sha256: abc
+      verdict: MALICIOUS
+      malware_family: ExampleRAT
+lineage:
+  status: NORMAL
+governance:
+  admissibility_tier: VALIDATED
+  policy_refs:
+  - policy:global-file-context-v1
+  review_required: false
+tags:
+- reputation_malicious
+- gti_file

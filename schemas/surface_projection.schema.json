@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/surface_projection.schema.json",
+  "title": "SurfaceProjection",
+  "type": "object",
+  "required": [
+    "projection_id",
+    "surface",
+    "projection_mode",
+    "source_cells",
+    "join_policy",
+    "materialization"
+  ],
+  "properties": {
+    "projection_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "surface": {
+      "enum": [
+        "SEARCH",
+        "RULES",
+        "DASHBOARDS",
+        "EXPORT",
+        "API",
+        "CONVERSATION",
+        "HIDDEN"
+      ]
+    },
+    "projection_mode": {
+      "enum": [
+        "SEARCH_RESULT",
+        "RULE_BINDING",
+        "DASHBOARD_MATERIALIZATION",
+        "EXPORT_VIEW",
+        "API_VIEW",
+        "CONVERSATION_VIEW"
+      ]
+    },
+    "source_cells": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "join_policy": {
+      "type": "object",
+      "required": [
+        "query_shape"
+      ],
+      "properties": {
+        "query_shape": {
+          "type": "string"
+        },
+        "multistage_allowed": {
+          "type": "boolean"
+        },
+        "max_named_stages": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "simultaneous_udm_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "simultaneous_ecg_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "materialization": {
+      "type": "object",
+      "required": [
+        "freshness_sla",
+        "exportable"
+      ],
+      "properties": {
+        "freshness_sla": {
+          "type": "string"
+        },
+        "exportable": {
+          "type": "boolean"
+        },
+        "dashboard_visible": {
+          "type": "boolean"
+        },
+        "search_visible": {
+          "type": "boolean"
+        },
+        "rules_visible": {
+          "type": "boolean"
+        },
+        "replay_sensitive": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "policy_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

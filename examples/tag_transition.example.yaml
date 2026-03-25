@@ -1,0 +1,18 @@
+transition_id: tt-001
+tag_id: gti_file
+from_status: PROVISIONAL
+to_status: GOVERNED
+relation: SUPPORTED_BY
+compatibility_class: ADDITIVE
+support_refs:
+- cell-artifact-file-001
+- review:secops-steward-01
+surface_applicability:
+- SEARCH
+- RULES
+- DASHBOARDS
+review_required: true
+issued_by: steward-agent
+confidence: 0.94
+replay_required: false
+timestamp: '2026-03-11T12:00:00Z'

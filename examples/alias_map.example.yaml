@@ -1,0 +1,16 @@
+alias_group_id: threat-intel-gti
+canonical_term: GTI
+aliases:
+- term: Google Threat Intelligence
+  kind: COMPATIBILITY
+  source_refs:
+  - google-docs-ecg
+- term: GCTI
+  kind: LEGACY_VENDOR
+  source_refs:
+  - google-docs-yaral
+- term: Google Cloud Threat Intelligence
+  kind: LEGACY_VENDOR
+  source_refs:
+  - google-docs-yaral
+notes: Canonical internal enum remains GTI; preserve vendor/doc aliases for compatibility.

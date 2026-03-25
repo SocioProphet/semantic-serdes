@@ -1,0 +1,43 @@
+cell_id: cell-user-dept-001
+object_kind: SECURITY_CONTEXT_RECORD
+schema_version: 1.0.0
+semantic_version: '2026.03'
+plane: ENTITY
+truth_class: ASSERTED
+time_model: INTERVAL
+merge_model: CONDITIONAL_FALLBACK
+scope: NAMESPACE
+surface_visibility:
+- SEARCH
+- RULES
+source:
+  source_type: ENTITY_CONTEXT
+  vendor_name: Google SecOps
+  product_name: ECG
+  feed_family: USER
+  namespace: corp
+validity:
+  interval:
+    start: '2026-03-01T00:00:00Z'
+    end: '2026-03-06T00:00:00Z'
+provenance:
+  source_refs:
+  - idp:user:mheller
+  hashes:
+  - sha256:userctx001
+payload:
+  entity:
+    principal:
+      user:
+        userid: mheller
+        department: Security Architecture
+lineage:
+  status: NORMAL
+governance:
+  admissibility_tier: GOVERNED
+  policy_refs:
+  - policy:user-alias-precedence-v1
+  review_required: false
+tags:
+- identity_asserted
+- department_context

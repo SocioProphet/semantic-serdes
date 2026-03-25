@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/agent_message.schema.json",
+  "title": "AgentMessage",
+  "type": "object",
+  "required": [
+    "message_id",
+    "from_agent",
+    "to_agent",
+    "message_kind",
+    "semantic_refs",
+    "headers",
+    "payload_ref"
+  ],
+  "properties": {
+    "message_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "from_agent": {
+      "type": "string"
+    },
+    "to_agent": {
+      "type": "string"
+    },
+    "message_kind": {
+      "type": "string"
+    },
+    "semantic_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "headers": {
+      "type": "object",
+      "required": [
+        "freshness_deadline",
+        "capability_tokens"
+      ],
+      "properties": {
+        "freshness_deadline": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "capability_tokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "witness_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branch_id": {
+          "type": "string"
+        },
+        "approximate": {
+          "type": "boolean"
+        },
+        "surface_hints": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "SEARCH",
+              "RULES",
+              "DASHBOARDS",
+              "EXPORT",
+              "API",
+              "CONVERSATION",
+              "HIDDEN"
+            ]
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "payload_ref": {
+      "type": "string"
+    },
+    "trace": {
+      "type": "object",
+      "properties": {
+        "parent_message_id": {
+          "type": "string"
+        },
+        "conversation_id": {
+          "type": "string"
+        },
+        "sent_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

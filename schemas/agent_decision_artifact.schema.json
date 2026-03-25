@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/agent_decision_artifact.schema.json",
+  "title": "AgentDecisionArtifact",
+  "type": "object",
+  "required": [
+    "decision_id",
+    "decision_kind",
+    "preferred_option",
+    "alternatives",
+    "policy_basis",
+    "evidence_refs",
+    "issued_by"
+  ],
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_kind": {
+      "type": "string"
+    },
+    "preferred_option": {
+      "type": "string"
+    },
+    "alternatives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "option_id",
+          "summary",
+          "status"
+        ],
+        "properties": {
+          "option_id": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PREFERRED",
+              "CONSERVATIVE",
+              "EXTENSION_OF_CURRENT_STACK",
+              "REJECTED",
+              "CONTESTED"
+            ]
+          },
+          "tradeoffs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "policy_basis": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "issued_by": {
+      "type": "string"
+    },
+    "review_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,22 @@
+message_id: msg-001
+from_agent: context-enrichment-agent
+to_agent: surface-projection-agent
+message_kind: PROJECT_SEARCH_VIEW
+semantic_refs:
+- cell-user-dept-001
+- cell-artifact-file-001
+headers:
+  freshness_deadline: '2026-03-11T12:30:00Z'
+  capability_tokens:
+  - cap:project-search
+  - cap:read-entity
+  witness_refs:
+  - review:secops-steward-01
+  branch_id: mainline
+  approximate: false
+  surface_hints:
+  - SEARCH
+payload_ref: surface_projection:sp-001
+trace:
+  conversation_id: conv-001
+  sent_at: '2026-03-11T12:10:00Z'

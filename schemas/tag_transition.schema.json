@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/tag_transition.schema.json",
+  "title": "TagTransition",
+  "type": "object",
+  "required": [
+    "transition_id",
+    "tag_id",
+    "from_status",
+    "to_status",
+    "relation",
+    "compatibility_class",
+    "support_refs",
+    "issued_by"
+  ],
+  "properties": {
+    "transition_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tag_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "from_status": {
+      "enum": [
+        "PROPOSED",
+        "PROVISIONAL",
+        "GOVERNED",
+        "CANONICAL",
+        "CONTESTED",
+        "DEPRECATED",
+        "SUPERSEDED"
+      ]
+    },
+    "to_status": {
+      "enum": [
+        "PROPOSED",
+        "PROVISIONAL",
+        "GOVERNED",
+        "CANONICAL",
+        "CONTESTED",
+        "DEPRECATED",
+        "SUPERSEDED"
+      ]
+    },
+    "relation": {
+      "enum": [
+        "ALIAS_OF",
+        "SUPERSEDES",
+        "SUPERSEDED_BY",
+        "SPLITS_INTO",
+        "MERGES_FROM",
+        "NARROWS",
+        "BROADENS",
+        "CONFLICTS_WITH",
+        "CONTESTED_BY",
+        "SUPPORTED_BY",
+        "DEPRECATED_BY"
+      ]
+    },
+    "compatibility_class": {
+      "enum": [
+        "PATCH",
+        "ADDITIVE",
+        "RESTRICTIVE",
+        "REINTERPRETIVE",
+        "IDENTITY",
+        "BREAKING"
+      ]
+    },
+    "support_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "surface_applicability": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "SEARCH",
+          "RULES",
+          "DASHBOARDS",
+          "EXPORT",
+          "API",
+          "CONVERSATION",
+          "HIDDEN"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "review_required": {
+      "type": "boolean"
+    },
+    "issued_by": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "notes": {
+      "type": "string"
+    },
+    "replay_required": {
+      "type": "boolean"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

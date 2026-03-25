@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/context_merge_policy.schema.json",
+  "title": "ContextMergePolicy",
+  "type": "object",
+  "required": [
+    "policy_id",
+    "target_family",
+    "default_strategy",
+    "rules"
+  ],
+  "properties": {
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_family": {
+      "type": "string"
+    },
+    "default_strategy": {
+      "enum": [
+        "APPEND",
+        "MERGED",
+        "CONDITIONAL_FALLBACK",
+        "FIRST_MATCH",
+        "OVERWRITE",
+        "PARALLEL",
+        "MATERIALIZE"
+      ]
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "match_when",
+          "strategy"
+        ],
+        "properties": {
+          "match_when": {
+            "type": "object"
+          },
+          "strategy": {
+            "enum": [
+              "APPEND",
+              "MERGED",
+              "CONDITIONAL_FALLBACK",
+              "FIRST_MATCH",
+              "OVERWRITE",
+              "PARALLEL",
+              "MATERIALIZE"
+            ]
+          },
+          "precedence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "overwrite_allowed": {
+            "type": "boolean"
+          },
+          "parallel_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "replay_behavior": {
+      "type": "object",
+      "properties": {
+        "late_arrival_reprocess": {
+          "type": "boolean"
+        },
+        "max_replay_delay_hours": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

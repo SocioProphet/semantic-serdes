@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/semantic_cell.schema.json",
+  "title": "SemanticCell",
+  "type": "object",
+  "required": [
+    "cell_id",
+    "plane",
+    "truth_class",
+    "time_model",
+    "scope",
+    "provenance",
+    "payload",
+    "governance"
+  ],
+  "properties": {
+    "cell_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "object_kind": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "semantic_version": {
+      "type": "string"
+    },
+    "plane": {
+      "enum": [
+        "RAW",
+        "EVENT",
+        "ENTITY",
+        "DERIVED",
+        "GLOBAL",
+        "SURFACE"
+      ]
+    },
+    "truth_class": {
+      "enum": [
+        "OBSERVED",
+        "ASSERTED",
+        "INFERRED",
+        "REPUTED"
+      ]
+    },
+    "time_model": {
+      "enum": [
+        "INSTANT",
+        "INTERVAL",
+        "SNAPSHOT",
+        "TIMELESS",
+        "QUERY_WINDOW"
+      ]
+    },
+    "merge_model": {
+      "enum": [
+        "APPEND",
+        "MERGED",
+        "CONDITIONAL_FALLBACK",
+        "FIRST_MATCH",
+        "OVERWRITE",
+        "PARALLEL",
+        "MATERIALIZE"
+      ]
+    },
+    "scope": {
+      "enum": [
+        "NAMESPACE",
+        "TENANT",
+        "GLOBAL"
+      ]
+    },
+    "surface_visibility": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "SEARCH",
+          "RULES",
+          "DASHBOARDS",
+          "EXPORT",
+          "API",
+          "CONVERSATION",
+          "HIDDEN"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "source_type"
+      ],
+      "properties": {
+        "source_type": {
+          "enum": [
+            "EVENT",
+            "ENTITY_CONTEXT",
+            "DERIVED_CONTEXT",
+            "GLOBAL_CONTEXT",
+            "SURFACE_COMPUTE",
+            "RULE_REPLAY",
+            "MANUAL_REVIEW"
+          ]
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "feed_family": {
+          "type": "string"
+        },
+        "threat_feed_name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "validity": {
+      "type": "object",
+      "properties": {
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "interval": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "additionalProperties": false
+        },
+        "timeless": {
+          "type": "boolean"
+        },
+        "processing_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "replay_window_hours": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_refs",
+        "hashes"
+      ],
+      "properties": {
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "witness_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "inputs_hash": {
+          "type": "string"
+        },
+        "config_hash": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "payload": {
+      "type": "object"
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_cells": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "derived_from": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branch_id": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "NORMAL",
+            "APPROXIMATE",
+            "CONTESTED",
+            "REPLAYED"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "admissibility_tier"
+      ],
+      "properties": {
+        "admissibility_tier": {
+          "enum": [
+            "RAW",
+            "VALIDATED",
+            "GOVERNED",
+            "CANONICAL",
+            "CONTESTED"
+          ]
+        },
+        "policy_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "review_required": {
+          "type": "boolean"
+        },
+        "exception_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

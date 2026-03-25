@@ -1,0 +1,23 @@
+projection_id: sp-001
+surface: SEARCH
+projection_mode: SEARCH_RESULT
+source_cells:
+- cell-asset-hostname-001
+- cell-artifact-file-001
+join_policy:
+  query_shape: single-stage with one ECG-bearing join
+  multistage_allowed: true
+  max_named_stages: 4
+  simultaneous_udm_events: 2
+  simultaneous_ecg_events: 1
+  notes: Model query shape constraints rather than fixed one-line platform limits.
+materialization:
+  freshness_sla: PT15M
+  exportable: false
+  dashboard_visible: false
+  search_visible: true
+  rules_visible: false
+  replay_sensitive: true
+policy_refs:
+- policy:surface-search-v1
+generated_at: '2026-03-11T12:05:00Z'

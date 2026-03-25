@@ -1,0 +1,17 @@
+policy_id: policy:user-alias-precedence-v1
+target_family: USER
+default_strategy: CONDITIONAL_FALLBACK
+rules:
+- match_when:
+    entity_family: USER
+    field: department
+  strategy: CONDITIONAL_FALLBACK
+  precedence:
+  - parsed_field
+  - authoritative_entity_context
+  - aliased_field
+  overwrite_allowed: false
+  notes: Prefer parsed field if present; fall back to authoritative context.
+replay_behavior:
+  late_arrival_reprocess: true
+  max_replay_delay_hours: 48
