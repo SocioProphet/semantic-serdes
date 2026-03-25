@@ -1,0 +1,27 @@
+message_id: msg.001
+sender: agent.context.ingester
+recipient: agent.policy.reasoner
+sent_at: '2026-03-11T13:00:00Z'
+delivery_semantics: REPLAYABLE
+subject: proposed tag transition for asset criticality
+payload_ref: tt.001
+semantic_tags:
+- tag.topic.asset-criticality
+- tag.surface.rules
+capability_tokens:
+- cap.review.policy
+freshness_deadline: '2026-03-11T15:00:00Z'
+branch_id: branch.main
+witness_refs:
+- wit.001
+- wit.002
+governance:
+  admissibility_tier: VALIDATED
+  review_status: PENDING
+  policy_basis:
+  - secctx.v1
+  - msg.v1
+replay:
+  replayable: true
+  message_hash: sha256:111
+  config_hash: sha256:222

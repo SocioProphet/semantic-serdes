@@ -1,0 +1,32 @@
+decision_id: dec.001
+decision_subject: merge strategy for process enrichment
+outcome: ACCEPT
+issued_by: agent.decision.integrator
+supporting_messages:
+- msg.001
+- msg.002
+alternatives:
+- alternative_id: alt.a
+  summary: parsed fields always win
+  status: REJECTED
+  tradeoffs:
+  - misses enriched PSPI data
+- alternative_id: alt.b
+  summary: aliased process fields may overwrite parsed ones with provenance
+  status: PREFERRED
+  tradeoffs:
+  - requires replay discipline
+constraints:
+- reuse-first
+- forensic-accountability
+evidence_refs:
+- cmp.process.v1
+- wit.004
+review:
+  status: APPROVED
+  required_roles:
+  - steward
+  - runtime-owner
+  approved_by:
+  - alice
+  - carol

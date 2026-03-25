@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TagTransition",
+  "type": "object",
+  "required": [
+    "transition_id",
+    "tag_id",
+    "from_status",
+    "to_status",
+    "relation",
+    "compatibility_class",
+    "support_set",
+    "issued_by",
+    "review"
+  ],
+  "properties": {
+    "transition_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "tag_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "from_status": {
+      "enum": [
+        "PROPOSED",
+        "PROVISIONAL",
+        "GOVERNED",
+        "CANONICAL",
+        "CONTESTED",
+        "DEPRECATED",
+        "SUPERSEDED"
+      ]
+    },
+    "to_status": {
+      "enum": [
+        "PROPOSED",
+        "PROVISIONAL",
+        "GOVERNED",
+        "CANONICAL",
+        "CONTESTED",
+        "DEPRECATED",
+        "SUPERSEDED"
+      ]
+    },
+    "relation": {
+      "enum": [
+        "ALIAS_OF",
+        "SUPERCEDES",
+        "SUPERSEDED_BY",
+        "SPLITS_INTO",
+        "MERGES_FROM",
+        "NARROWS",
+        "BROADENS",
+        "CONFLICTS_WITH",
+        "CONTESTED_BY",
+        "DEPRECATED_BY",
+        "SUPPORTED_BY"
+      ]
+    },
+    "compatibility_class": {
+      "enum": [
+        "PATCH",
+        "ADDITIVE",
+        "RESTRICTIVE",
+        "REINTERPRETIVE",
+        "IDENTITY",
+        "BREAKING"
+      ]
+    },
+    "support_set": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "surface_applicability": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "SEARCH",
+          "RULES",
+          "DASHBOARDS",
+          "EXPORT",
+          "HIDDEN",
+          "CONVERSATION",
+          "API"
+        ]
+      }
+    },
+    "validity": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "end": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "issued_by": {
+      "type": "string"
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "review": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "NOT_REQUIRED",
+            "REQUIRED",
+            "PENDING",
+            "APPROVED",
+            "REJECTED",
+            "ESCALATED"
+          ]
+        },
+        "required_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "approved_by": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decision_artifact_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "replay_obligation": {
+      "type": "boolean"
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kvObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_ref"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "feed_family": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "witness_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branch_id": {
+          "type": "string"
+        },
+        "replay_id": {
+          "type": "string"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

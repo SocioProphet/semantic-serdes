@@ -1,0 +1,19 @@
+policy_id: cmp.user.alias.v1
+entity_family: USER
+merge_strategy: CONDITIONAL_FALLBACK
+precedence:
+- parsed.user.email
+- entity.aliases
+- entity.username
+field_rules:
+- field_path: principal.user.email
+  strategy: CONDITIONAL_FALLBACK
+  overwrite_allowed: false
+  conditional_on: missing(parsed.user.email)
+- field_path: principal.user.department
+  strategy: MERGED
+  overwrite_allowed: false
+replay_policy:
+  late_arrival_action: REPLAY
+  max_delay_hours: 48
+  allow_retro_materialization: true

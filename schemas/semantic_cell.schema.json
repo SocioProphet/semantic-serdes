@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SemanticCell",
+  "type": "object",
+  "required": [
+    "cell_id",
+    "plane",
+    "truth_class",
+    "time_model",
+    "merge_model",
+    "scope",
+    "provenance",
+    "payload",
+    "governance"
+  ],
+  "properties": {
+    "cell_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "plane": {
+      "enum": [
+        "RAW",
+        "EVENT",
+        "ENTITY",
+        "DERIVED",
+        "GLOBAL",
+        "SURFACE"
+      ]
+    },
+    "truth_class": {
+      "enum": [
+        "OBSERVED",
+        "ASSERTED",
+        "INFERRED",
+        "REPUTED"
+      ]
+    },
+    "time_model": {
+      "enum": [
+        "INSTANT",
+        "INTERVAL",
+        "SNAPSHOT",
+        "TIMELESS",
+        "QUERY_WINDOW"
+      ]
+    },
+    "merge_model": {
+      "enum": [
+        "APPEND",
+        "MERGED",
+        "CONDITIONAL_FALLBACK",
+        "FIRST_MATCH",
+        "OVERWRITE",
+        "PARALLEL",
+        "MATERIALIZE"
+      ]
+    },
+    "scope": {
+      "enum": [
+        "NAMESPACE",
+        "TENANT",
+        "GLOBAL",
+        "REPO",
+        "DOMAIN"
+      ]
+    },
+    "surface_applicability": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "SEARCH",
+          "RULES",
+          "DASHBOARDS",
+          "EXPORT",
+          "HIDDEN",
+          "CONVERSATION",
+          "API"
+        ]
+      }
+    },
+    "surface_visibility": {
+      "enum": [
+        "VISIBLE",
+        "LIMITED",
+        "HIDDEN",
+        "REPLAY_ONLY",
+        "EXPORT_ONLY"
+      ]
+    },
+    "observed_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "validity": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "end": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "timeless": {
+          "type": "boolean"
+        },
+        "processing_time": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "payload": {
+      "$ref": "#/$defs/kvObject"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "admissibility_tier",
+        "review_status"
+      ],
+      "properties": {
+        "admissibility_tier": {
+          "enum": [
+            "RAW",
+            "VALIDATED",
+            "GOVERNED",
+            "CANONICAL"
+          ]
+        },
+        "review_status": {
+          "enum": [
+            "NOT_REQUIRED",
+            "REQUIRED",
+            "PENDING",
+            "APPROVED",
+            "REJECTED",
+            "ESCALATED"
+          ]
+        },
+        "policy_basis": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exception_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "precision": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "EXACT",
+            "APPROX"
+          ]
+        },
+        "delta": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "replay": {
+      "type": "object",
+      "properties": {
+        "inputs_hash": {
+          "type": "string"
+        },
+        "config_hash": {
+          "type": "string"
+        },
+        "replayable": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kvObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_ref"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "feed_family": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "witness_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branch_id": {
+          "type": "string"
+        },
+        "replay_id": {
+          "type": "string"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SurfaceProjection",
+  "type": "object",
+  "required": [
+    "projection_id",
+    "surface",
+    "source_cells",
+    "projection_mode",
+    "materialization",
+    "constraints"
+  ],
+  "properties": {
+    "projection_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "surface": {
+      "enum": [
+        "SEARCH",
+        "RULES",
+        "DASHBOARDS",
+        "EXPORT",
+        "HIDDEN",
+        "CONVERSATION",
+        "API"
+      ]
+    },
+    "source_cells": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "projection_mode": {
+      "enum": [
+        "SEARCH_QUERY",
+        "RULE_COMPILATION",
+        "DASHBOARD_VIEW",
+        "EXPORT_SHAPE",
+        "CONVERSATION_VIEW",
+        "API_VIEW"
+      ]
+    },
+    "materialization": {
+      "enum": [
+        "ON_DEMAND",
+        "PRECOMPUTED",
+        "CACHED",
+        "REPLAYED"
+      ]
+    },
+    "constraints": {
+      "type": "object",
+      "required": [
+        "query_shape_dependent"
+      ],
+      "properties": {
+        "query_shape_dependent": {
+          "type": "boolean"
+        },
+        "max_stages": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_udm_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_ecg_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "multistage_supported": {
+          "type": "boolean"
+        },
+        "exportable": {
+          "type": "boolean"
+        },
+        "join_notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "freshness": {
+      "type": "object",
+      "properties": {
+        "materialized_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "visibility": {
+      "enum": [
+        "VISIBLE",
+        "LIMITED",
+        "HIDDEN",
+        "REPLAY_ONLY",
+        "EXPORT_ONLY"
+      ]
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kvObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_ref"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "feed_family": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "witness_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branch_id": {
+          "type": "string"
+        },
+        "replay_id": {
+          "type": "string"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

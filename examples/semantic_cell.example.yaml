@@ -1,0 +1,36 @@
+cell_id: cell.asset.dept.001
+plane: ENTITY
+truth_class: ASSERTED
+time_model: INTERVAL
+merge_model: MERGED
+scope: TENANT
+surface_applicability:
+- SEARCH
+- RULES
+- DASHBOARDS
+surface_visibility: VISIBLE
+validity:
+  start: '2026-03-10T00:00:00Z'
+  end: '2026-03-15T00:00:00Z'
+provenance:
+  source_type: ENTITY_CONTEXT
+  source_ref: idp://corp/hr
+  vendor_name: Internal
+  product_name: HRIS
+payload:
+  principal:
+    user:
+      department: Engineering
+tags:
+- tag.identity.department
+governance:
+  admissibility_tier: GOVERNED
+  review_status: NOT_REQUIRED
+  policy_basis:
+  - secctx.v1
+precision:
+  mode: EXACT
+replay:
+  replayable: true
+  inputs_hash: sha256:abc
+  config_hash: sha256:def

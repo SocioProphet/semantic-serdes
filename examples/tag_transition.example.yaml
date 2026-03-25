@@ -1,0 +1,23 @@
+transition_id: tt.001
+tag_id: tag.topic.gti-low-prevalence
+from_status: PROVISIONAL
+to_status: GOVERNED
+relation: SUPPORTED_BY
+compatibility_class: ADDITIVE
+support_set:
+- cell.entity.domain.prevalence.01
+- cell.global.gti.domain.77
+surface_applicability:
+- SEARCH
+- RULES
+issued_by: agent.policy.reasoner
+rationale: Support set stable across derived and global context
+review:
+  status: APPROVED
+  required_roles:
+  - steward
+  - detection-engineer
+  approved_by:
+  - steward:alice
+  - analyst:bob
+replay_obligation: true

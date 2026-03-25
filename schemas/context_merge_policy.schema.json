@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ContextMergePolicy",
+  "type": "object",
+  "required": [
+    "policy_id",
+    "entity_family",
+    "merge_strategy",
+    "precedence",
+    "field_rules",
+    "replay_policy"
+  ],
+  "properties": {
+    "policy_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "entity_family": {
+      "enum": [
+        "ASSET",
+        "USER",
+        "PROCESS",
+        "ARTIFACT",
+        "NETWORK",
+        "GENERIC"
+      ]
+    },
+    "merge_strategy": {
+      "enum": [
+        "APPEND",
+        "MERGED",
+        "CONDITIONAL_FALLBACK",
+        "FIRST_MATCH",
+        "OVERWRITE",
+        "PARALLEL",
+        "MATERIALIZE"
+      ]
+    },
+    "precedence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "field_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "field_path",
+          "strategy"
+        ],
+        "properties": {
+          "field_path": {
+            "type": "string"
+          },
+          "strategy": {
+            "enum": [
+              "APPEND",
+              "MERGED",
+              "CONDITIONAL_FALLBACK",
+              "FIRST_MATCH",
+              "OVERWRITE",
+              "PARALLEL",
+              "MATERIALIZE"
+            ]
+          },
+          "overwrite_allowed": {
+            "type": "boolean"
+          },
+          "conditional_on": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "replay_policy": {
+      "type": "object",
+      "required": [
+        "late_arrival_action"
+      ],
+      "properties": {
+        "late_arrival_action": {
+          "enum": [
+            "REPLAY",
+            "PATCH_CONTEXT",
+            "IGNORE",
+            "ESCALATE"
+          ]
+        },
+        "max_delay_hours": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allow_retro_materialization": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kvObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_ref"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "feed_family": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "witness_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branch_id": {
+          "type": "string"
+        },
+        "replay_id": {
+          "type": "string"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
