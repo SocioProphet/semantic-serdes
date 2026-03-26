@@ -1,0 +1,47 @@
+cell_id: cell-asset-hostname-001
+object_kind: SECURITY_CONTEXT_RECORD
+schema_version: 1.0.0
+semantic_version: '2026.03'
+plane: ENTITY
+truth_class: ASSERTED
+time_model: INTERVAL
+merge_model: MERGED
+scope: NAMESPACE
+surface_visibility:
+- SEARCH
+- RULES
+- DASHBOARDS
+source:
+  source_type: ENTITY_CONTEXT
+  vendor_name: Google SecOps
+  product_name: ECG
+  feed_family: ASSET
+  namespace: prod
+validity:
+  interval:
+    start: '2026-03-01T00:00:00Z'
+    end: '2026-03-06T00:00:00Z'
+  processing_time: '2026-03-01T00:15:00Z'
+provenance:
+  source_refs:
+  - cmdb:asset-7781
+  hashes:
+  - sha256:assetctx001
+  inputs_hash: sha256:inputs-asset-001
+  config_hash: sha256:cfg-asset-001
+payload:
+  entity:
+    asset_id: asset-7781
+    hostname: db-prod-17
+    criticality: HIGH
+    ip: 10.1.4.17
+lineage:
+  status: NORMAL
+governance:
+  admissibility_tier: GOVERNED
+  policy_refs:
+  - policy:asset-merge-v1
+  review_required: false
+tags:
+- asset_criticality_high
+- cmdb_asserted

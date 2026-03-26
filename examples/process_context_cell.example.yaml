@@ -1,0 +1,41 @@
+cell_id: cell-process-pspi-001
+object_kind: SECURITY_CONTEXT_RECORD
+schema_version: 1.0.0
+semantic_version: '2026.03'
+plane: ENTITY
+truth_class: ASSERTED
+time_model: SNAPSHOT
+merge_model: OVERWRITE
+scope: NAMESPACE
+surface_visibility:
+- SEARCH
+- RULES
+source:
+  source_type: ENTITY_CONTEXT
+  vendor_name: Google SecOps
+  product_name: ECG
+  feed_family: PROCESS
+  namespace: endpoint
+validity:
+  observed_at: '2026-03-10T15:21:00Z'
+  processing_time: '2026-03-10T15:22:00Z'
+provenance:
+  source_refs:
+  - edr:proc:pspi-4388
+  hashes:
+  - sha256:procctx001
+payload:
+  entity:
+    process:
+      product_specific_process_id: pspi-4388
+      command_line: ssh -N -L 8443:localhost:443 jump-host
+lineage:
+  status: NORMAL
+governance:
+  admissibility_tier: VALIDATED
+  policy_refs:
+  - policy:process-overwrite-v1
+  review_required: true
+tags:
+- process_context
+- pspi_anchor
