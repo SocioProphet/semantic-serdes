@@ -1,85 +1,159 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://socioprophet.example/schemas/replay_artifact.schema.json",
   "title": "ReplayArtifact",
   "type": "object",
   "required": [
     "replay_id",
-    "trigger_kind",
-    "affected_refs",
-    "window",
-    "status"
+    "trigger",
+    "scope",
+    "materialized_at",
+    "affected_objects",
+    "reason"
   ],
   "properties": {
     "replay_id": {
-      "type": "string",
-      "minLength": 1
+      "$ref": "#/$defs/identifier"
     },
-    "trigger_kind": {
+    "trigger": {
       "enum": [
         "LATE_EVENT",
         "LATE_CONTEXT",
         "POLICY_CHANGE",
-        "MANUAL_REPROCESS",
-        "MATERIALIZATION_REFRESH"
+        "TAG_TRANSITION",
+        "MANUAL",
+        "SCHEDULED"
       ]
     },
-    "affected_refs": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "minItems": 1
-    },
-    "window": {
-      "type": "object",
-      "required": [
-        "start",
-        "end"
-      ],
-      "properties": {
-        "start": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "end": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "additionalProperties": false
-    },
-    "status": {
-      "enum": [
-        "QUEUED",
-        "RUNNING",
-        "COMPLETE",
-        "FAILED",
-        "PARTIAL"
-      ]
-    },
-    "primary_vs_replay": {
-      "enum": [
-        "PRIMARY",
-        "REPLAY"
-      ]
-    },
-    "root_cause": {
+    "scope": {
       "type": "string"
     },
-    "output_refs": {
+    "materialized_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "affected_objects": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "started_at": {
+    "reason": {
+      "type": "string"
+    },
+    "recomputed_surfaces": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "SEARCH",
+          "RULES",
+          "DASHBOARDS",
+          "EXPORT",
+          "HIDDEN",
+          "CONVERSATION",
+          "API"
+        ]
+      }
+    },
+    "inputs_hash": {
+      "type": "string"
+    },
+    "config_hash": {
+      "type": "string"
+    },
+    "output_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
       "type": "string",
       "format": "date-time"
     },
-    "completed_at": {
-      "type": "string",
-      "format": "date-time"
+    "kvObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_ref"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "feed_family": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "witness_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branch_id": {
+          "type": "string"
+        },
+        "replay_id": {
+          "type": "string"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": false

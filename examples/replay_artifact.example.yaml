@@ -1,14 +1,16 @@
-replay_id: rp-001
-trigger_kind: LATE_CONTEXT
-affected_refs:
-- cell-user-dept-001
-- sp-001
-- alert-7781
-window:
-  start: '2026-03-10T00:00:00Z'
-  end: '2026-03-11T12:00:00Z'
-status: QUEUED
-primary_vs_replay: REPLAY
-root_cause: user department context arrived after first-pass detection evaluation
-output_refs: []
-started_at: '2026-03-11T12:14:00Z'
+replay_id: rep.001
+trigger: LATE_CONTEXT
+scope: tenant/acme
+materialized_at: '2026-03-11T16:00:00Z'
+affected_objects:
+- sp.rules.asset-join.001
+- cell.asset.dept.001
+reason: entity enrichment arrived after initial rule evaluation
+recomputed_surfaces:
+- RULES
+- DASHBOARDS
+inputs_hash: sha256:aaaa
+config_hash: sha256:bbbb
+output_artifacts:
+- alert.123.replay
+- dash.456.refresh

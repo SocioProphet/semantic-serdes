@@ -1,50 +1,163 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://socioprophet.example/schemas/agent_message.schema.json",
   "title": "AgentMessage",
   "type": "object",
   "required": [
     "message_id",
-    "from_agent",
-    "to_agent",
-    "message_kind",
-    "semantic_refs",
-    "headers",
-    "payload_ref"
+    "sender",
+    "recipient",
+    "sent_at",
+    "delivery_semantics",
+    "subject",
+    "payload_ref",
+    "governance"
   ],
   "properties": {
     "message_id": {
-      "type": "string",
-      "minLength": 1
+      "$ref": "#/$defs/identifier"
     },
-    "from_agent": {
+    "sender": {
       "type": "string"
     },
-    "to_agent": {
+    "recipient": {
       "type": "string"
     },
-    "message_kind": {
+    "sent_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "delivery_semantics": {
+      "enum": [
+        "AT_MOST_ONCE",
+        "AT_LEAST_ONCE",
+        "EXACTLY_ONCE",
+        "REPLAYABLE"
+      ]
+    },
+    "subject": {
       "type": "string"
     },
-    "semantic_refs": {
+    "payload_ref": {
+      "type": "string"
+    },
+    "semantic_tags": {
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "minItems": 1
+      }
     },
-    "headers": {
+    "capability_tokens": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "freshness_deadline": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "branch_id": {
+      "type": "string"
+    },
+    "witness_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "governance": {
       "type": "object",
       "required": [
-        "freshness_deadline",
-        "capability_tokens"
+        "admissibility_tier",
+        "review_status"
       ],
       "properties": {
-        "freshness_deadline": {
-          "type": "string",
-          "format": "date-time"
+        "admissibility_tier": {
+          "enum": [
+            "RAW",
+            "VALIDATED",
+            "GOVERNED",
+            "CANONICAL"
+          ]
         },
-        "capability_tokens": {
+        "review_status": {
+          "enum": [
+            "NOT_REQUIRED",
+            "REQUIRED",
+            "PENDING",
+            "APPROVED",
+            "REJECTED",
+            "ESCALATED"
+          ]
+        },
+        "policy_basis": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "replay": {
+      "type": "object",
+      "properties": {
+        "replayable": {
+          "type": "boolean"
+        },
+        "message_hash": {
+          "type": "string"
+        },
+        "config_hash": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kvObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_ref"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "feed_family": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "hashes": {
           "type": "array",
           "items": {
             "type": "string"
@@ -56,48 +169,38 @@
             "type": "string"
           }
         },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "branch_id": {
           "type": "string"
         },
-        "approximate": {
-          "type": "boolean"
+        "replay_id": {
+          "type": "string"
         },
-        "surface_hints": {
+        "supersedes": {
           "type": "array",
           "items": {
-            "enum": [
-              "SEARCH",
-              "RULES",
-              "DASHBOARDS",
-              "EXPORT",
-              "API",
-              "CONVERSATION",
-              "HIDDEN"
-            ]
-          },
-          "uniqueItems": true
+            "type": "string"
+          }
         }
       },
-      "additionalProperties": false
-    },
-    "payload_ref": {
-      "type": "string"
-    },
-    "trace": {
-      "type": "object",
-      "properties": {
-        "parent_message_id": {
-          "type": "string"
-        },
-        "conversation_id": {
-          "type": "string"
-        },
-        "sent_at": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "additionalProperties": false
+      "additionalProperties": true
     }
   },
   "additionalProperties": false

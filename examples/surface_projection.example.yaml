@@ -1,23 +1,18 @@
-projection_id: sp-001
-surface: SEARCH
-projection_mode: SEARCH_RESULT
+projection_id: sp.rules.asset-join.001
+surface: RULES
 source_cells:
-- cell-asset-hostname-001
-- cell-artifact-file-001
-join_policy:
-  query_shape: single-stage with one ECG-bearing join
-  multistage_allowed: true
-  max_named_stages: 4
-  simultaneous_udm_events: 2
-  simultaneous_ecg_events: 1
-  notes: Model query shape constraints rather than fixed one-line platform limits.
-materialization:
-  freshness_sla: PT15M
+- cell.event.login.001
+- cell.asset.criticality.004
+projection_mode: RULE_COMPILATION
+materialization: PRECOMPUTED
+constraints:
+  query_shape_dependent: true
+  multistage_supported: false
+  max_udm_events: 2
+  max_ecg_events: 1
   exportable: false
-  dashboard_visible: false
-  search_visible: true
-  rules_visible: false
-  replay_sensitive: true
-policy_refs:
-- policy:surface-search-v1
-generated_at: '2026-03-11T12:05:00Z'
+  join_notes: Rule surface restricted compared with multistage Search/Dashboards
+freshness:
+  materialized_at: '2026-03-11T12:00:00Z'
+  ttl_seconds: 3600
+visibility: VISIBLE

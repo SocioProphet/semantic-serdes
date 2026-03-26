@@ -1,40 +1,52 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://socioprophet.example/schemas/agent_decision_artifact.schema.json",
   "title": "AgentDecisionArtifact",
   "type": "object",
   "required": [
     "decision_id",
-    "decision_kind",
-    "preferred_option",
+    "decision_subject",
+    "outcome",
+    "issued_by",
+    "supporting_messages",
     "alternatives",
-    "policy_basis",
-    "evidence_refs",
-    "issued_by"
+    "review"
   ],
   "properties": {
     "decision_id": {
-      "type": "string",
-      "minLength": 1
+      "$ref": "#/$defs/identifier"
     },
-    "decision_kind": {
+    "decision_subject": {
       "type": "string"
     },
-    "preferred_option": {
+    "outcome": {
+      "enum": [
+        "ACCEPT",
+        "REJECT",
+        "ESCALATE",
+        "DEFER",
+        "CONTEST"
+      ]
+    },
+    "issued_by": {
       "type": "string"
+    },
+    "supporting_messages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     },
     "alternatives": {
       "type": "array",
-      "minItems": 1,
       "items": {
         "type": "object",
         "required": [
-          "option_id",
+          "alternative_id",
           "summary",
           "status"
         ],
         "properties": {
-          "option_id": {
+          "alternative_id": {
             "type": "string"
           },
           "summary": {
@@ -45,8 +57,7 @@
               "PREFERRED",
               "CONSERVATIVE",
               "EXTENSION_OF_CURRENT_STACK",
-              "REJECTED",
-              "CONTESTED"
+              "REJECTED"
             ]
           },
           "tradeoffs": {
@@ -57,39 +68,144 @@
           }
         },
         "additionalProperties": false
-      }
+      },
+      "minItems": 1
     },
-    "policy_basis": {
+    "constraints": {
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "minItems": 1
+      }
     },
     "evidence_refs": {
       "type": "array",
       "items": {
         "type": "string"
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "NOT_REQUIRED",
+            "REQUIRED",
+            "PENDING",
+            "APPROVED",
+            "REJECTED",
+            "ESCALATED"
+          ]
+        },
+        "required_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "approved_by": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       },
-      "minItems": 1
+      "additionalProperties": false
     },
-    "issued_by": {
-      "type": "string"
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
     },
-    "review_refs": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kvObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stringArray": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "confidence": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_ref"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "vendor_name": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "feed_family": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "witness_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
     },
-    "timestamp": {
-      "type": "string",
-      "format": "date-time"
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branch_id": {
+          "type": "string"
+        },
+        "replay_id": {
+          "type": "string"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": false
