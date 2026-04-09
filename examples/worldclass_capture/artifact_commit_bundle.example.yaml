@@ -1,0 +1,24 @@
+commit_id: artifact-commit-001
+epoch_id: env-epoch-2026-04-04T06:00:00Z
+artifact_refs:
+  - artifact:worldclass_outputs_v1.zip
+included_paths:
+  - /mnt/data/worldclass_outputs_v1/README.md
+  - /mnt/data/worldclass_outputs_v1/tables/claim_matrix.csv
+  - /mnt/data/worldclass_outputs_v1/schemas/wire_semantic_projection.schema.json
+blocked_paths:
+  - /home/oai/.chromium
+  - /openai/project/cua
+manifest_ref: artifact:worldclass_outputs_v1.manifest.json
+hash_refs:
+  - sha256:artifact-commit-001
+policy_ref: policy:export-boundary-v1
+replay_ref: replay:export-run-001
+provenance:
+  source_refs:
+    - run:sandbox-export-session-001
+governance:
+  admissibility_tier: GOVERNED
+  review_required: false
+notes: >
+  Demonstrates explicit artifact-only export, included/blocked lists, and hash-bound commit semantics.
