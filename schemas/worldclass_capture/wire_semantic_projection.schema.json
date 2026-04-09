@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/wire_semantic_projection.schema.json",
+  "title": "WireSemanticProjection",
+  "type": "object",
+  "required": [
+    "projection_id",
+    "epoch_id",
+    "codebook_version",
+    "cycle_version",
+    "source_cells",
+    "hot_coordinate",
+    "handle_bindings",
+    "placement_policy",
+    "resolver",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "projection_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "epoch_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "codebook_version": {
+      "type": "string"
+    },
+    "cycle_version": {
+      "type": "string"
+    },
+    "source_cells": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "schema_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "temporal_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "grounding_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environment_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hot_coordinate": {
+      "type": "object",
+      "required": [
+        "phase_code",
+        "topic_code"
+      ],
+      "properties": {
+        "phase_code": {
+          "type": "string"
+        },
+        "topic_code": {
+          "type": "string"
+        },
+        "phase_index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "topic_index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "state243_ref": {
+          "type": "string"
+        },
+        "state243_override": {
+          "type": "string"
+        },
+        "sem243_ref": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "handle_bindings": {
+      "type": "object",
+      "properties": {
+        "route_h": {
+          "type": "string"
+        },
+        "context_h": {
+          "type": "string"
+        },
+        "schema_h": {
+          "type": "string"
+        },
+        "bundle_h": {
+          "type": "string"
+        },
+        "environment_h": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "placement_policy": {
+      "type": "object",
+      "required": [
+        "default_cadence",
+        "hot_frame_allowed",
+        "stream_inheritable",
+        "beacon_allowed"
+      ],
+      "properties": {
+        "default_cadence": {
+          "enum": [
+            "MICROBEAT",
+            "MESOBEAT",
+            "MACROBEAT",
+            "ASYNC"
+          ]
+        },
+        "hot_frame_allowed": {
+          "type": "boolean"
+        },
+        "stream_inheritable": {
+          "type": "boolean"
+        },
+        "beacon_allowed": {
+          "type": "boolean"
+        },
+        "inline_override_allowed": {
+          "type": "boolean"
+        },
+        "sensitive_off_hot_path": {
+          "type": "boolean"
+        },
+        "repair_mode": {
+          "enum": [
+            "DELTA_FIRST",
+            "SNAPSHOT_FALLBACK",
+            "FULL_REFRESH"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "resolver": {
+      "type": "object",
+      "required": [
+        "alias_group_ids",
+        "transition_refs",
+        "replay_required"
+      ],
+      "properties": {
+        "alias_group_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "transition_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replay_required": {
+          "type": "boolean"
+        },
+        "epoch_rollover_policy": {
+          "enum": [
+            "STRICT",
+            "GRACE",
+            "FORCE_REFRESH"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_refs",
+        "hashes"
+      ],
+      "properties": {
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "admissibility_tier"
+      ],
+      "properties": {
+        "admissibility_tier": {
+          "enum": [
+            "RAW",
+            "VALIDATED",
+            "GOVERNED",
+            "CANONICAL",
+            "CONTESTED"
+          ]
+        },
+        "policy_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "review_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

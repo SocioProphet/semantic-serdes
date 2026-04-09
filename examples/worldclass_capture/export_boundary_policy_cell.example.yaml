@@ -1,0 +1,38 @@
+cell_id: policy:export-boundary-v1
+object_kind: EXPORT_BOUNDARY_POLICY
+artifact_root: /mnt/data
+default_export_roots:
+  - /mnt/data
+denied_roots:
+  - /home/oai
+  - /home/oai/skills
+  - /openai
+  - /proc
+  - /sys
+  - /dev
+symlink_policy:
+  resolve_realpath: true
+  deny_escape_by_default: true
+  explicit_override_required: true
+enumeration_policy:
+  depth_cap_default: 3
+  recursive_export_denied: true
+  copy_to_artifact_preferred: true
+manifest_policy:
+  required: true
+  include_blocked_entries: true
+  record_policy_ref: true
+hashing_policy:
+  required: true
+  algorithm: SHA-256
+  audit_ledger_required: true
+provenance:
+  source_refs:
+    - evidence:sandbox-working-paper
+    - evidence:raw-sandbox-permissions-dump
+governance:
+  admissibility_tier: CANONICAL
+  policy_refs:
+    - policy:least-privilege-export
+notes: >
+  Raw dump takes precedence over any synthetic report when exact mode bits disagree.

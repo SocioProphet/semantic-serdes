@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/export_boundary_policy_cell.schema.json",
+  "title": "ExportBoundaryPolicyCell",
+  "type": "object",
+  "required": [
+    "cell_id",
+    "object_kind",
+    "artifact_root",
+    "default_export_roots",
+    "denied_roots",
+    "symlink_policy",
+    "enumeration_policy",
+    "manifest_policy",
+    "hashing_policy",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "cell_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "object_kind": {
+      "const": "EXPORT_BOUNDARY_POLICY"
+    },
+    "artifact_root": {
+      "type": "string"
+    },
+    "default_export_roots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "denied_roots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "symlink_policy": {
+      "type": "object",
+      "required": [
+        "resolve_realpath",
+        "deny_escape_by_default"
+      ],
+      "properties": {
+        "resolve_realpath": {
+          "type": "boolean"
+        },
+        "deny_escape_by_default": {
+          "type": "boolean"
+        },
+        "explicit_override_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "enumeration_policy": {
+      "type": "object",
+      "required": [
+        "depth_cap_default",
+        "recursive_export_denied"
+      ],
+      "properties": {
+        "depth_cap_default": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "recursive_export_denied": {
+          "type": "boolean"
+        },
+        "copy_to_artifact_preferred": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "manifest_policy": {
+      "type": "object",
+      "required": [
+        "required",
+        "include_blocked_entries"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "include_blocked_entries": {
+          "type": "boolean"
+        },
+        "record_policy_ref": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "hashing_policy": {
+      "type": "object",
+      "required": [
+        "required",
+        "algorithm"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "algorithm": {
+          "enum": [
+            "SHA-256"
+          ]
+        },
+        "audit_ledger_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_refs"
+      ],
+      "properties": {
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "admissibility_tier"
+      ],
+      "properties": {
+        "admissibility_tier": {
+          "enum": [
+            "RAW",
+            "VALIDATED",
+            "GOVERNED",
+            "CANONICAL",
+            "CONTESTED"
+          ]
+        },
+        "policy_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,34 @@
+environment_id: env-openai-sandbox-2026-04-04
+epoch_id: env-epoch-2026-04-04T06:00:00Z
+artifact_roots:
+  - /mnt/data
+runtime_roots:
+  - /home/oai
+scaffold_roots:
+  - /home/oai/skills
+  - /home/oai/share
+  - /openai
+toolchain_refs:
+  - tcap-imagemagick
+  - tcap-pptxgenjs
+  - tcap-browser-cua
+  - tcap-python-ace
+environment_handles:
+  artifact_h: eh:artifact-root
+  runtime_h: eh:runtime-root
+  scaffold_h: eh:scaffold-root
+  toolchain_h: eh:toolchain-root
+policy_refs:
+  - policy:export-boundary-v1
+provenance:
+  source_refs:
+    - evidence:raw-sandbox-permissions-dump
+    - evidence:sandbox-working-paper
+  hashes:
+    - sha256:env-epoch-snapshot-001
+governance:
+  admissibility_tier: GOVERNED
+  review_required: false
+notes: >
+  Artifact root is exportable by default. Runtime/scaffold/toolchain roots are visible for reasoning
+  but not exportable without explicit governed movement into /mnt/data.
