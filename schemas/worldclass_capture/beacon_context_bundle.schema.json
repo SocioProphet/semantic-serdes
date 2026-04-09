@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/beacon_context_bundle.schema.json",
+  "title": "BeaconContextBundle",
+  "type": "object",
+  "required": ["bundle_id", "bundle_kind", "epoch_id", "semantic_refs", "defaults", "distribution", "provenance", "governance"],
+  "properties": {
+    "bundle_id": {"type": "string", "minLength": 1},
+    "bundle_kind": {"enum": ["CAPABILITY", "INTENT", "COMMIT", "DELTA", "LOAD", "SEMAPHORE", "EPOCH", "NOVELTY"]},
+    "epoch_id": {"type": "string", "minLength": 1},
+    "semantic_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "schema_refs": {"type": "array", "items": {"type": "string"}},
+    "temporal_refs": {"type": "array", "items": {"type": "string"}},
+    "grounding_refs": {"type": "array", "items": {"type": "string"}},
+    "environment_refs": {"type": "array", "items": {"type": "string"}},
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "phase_code": {"type": "string"},
+        "topic_code": {"type": "string"},
+        "state243": {"type": "string"},
+        "route_h": {"type": "string"},
+        "context_h": {"type": "string"},
+        "environment_h": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "distribution": {
+      "type": "object",
+      "required": ["cadence", "stream_reusable", "delta_mode"],
+      "properties": {
+        "cadence": {"enum": ["MESOBEAT", "MACROBEAT", "ASYNC"]},
+        "stream_reusable": {"type": "boolean"},
+        "delta_mode": {"enum": ["FULL", "PATCH", "TOMBSTONE", "SUPERSEDE"]},
+        "valid_from": {"type": "string", "format": "date-time"},
+        "valid_to": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source_refs", "hashes"],
+      "properties": {
+        "source_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "hashes": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["admissibility_tier"],
+      "properties": {
+        "admissibility_tier": {"enum": ["RAW", "VALIDATED", "GOVERNED", "CANONICAL", "CONTESTED"]},
+        "policy_refs": {"type": "array", "items": {"type": "string"}},
+        "review_required": {"type": "boolean"},
+        "replay_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "notes": {"type": "string"}
+  },
+  "additionalProperties": false
+}
