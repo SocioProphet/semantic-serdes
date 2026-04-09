@@ -1,32 +1,32 @@
-decision_id: dec-001
-decision_kind: TAG_CANONIZATION
-preferred_option: promote gti_file to GOVERNED
+decision_id: dec.001
+decision_subject: merge strategy for process enrichment
+outcome: ACCEPT
+issued_by: agent.decision.integrator
+supporting_messages:
+- msg.001
+- msg.002
 alternatives:
-- option_id: opt-1
-  summary: promote to GOVERNED
-  status: PREFERRED
-  tradeoffs:
-  - faster downstream routing
-  - requires steward review
-- option_id: opt-2
-  summary: leave PROVISIONAL
-  status: CONSERVATIVE
-  tradeoffs:
-  - less risk
-  - slower automation
-- option_id: opt-3
-  summary: merge into broader tag reputation_malicious
+- alternative_id: alt.a
+  summary: parsed fields always win
   status: REJECTED
   tradeoffs:
-  - loses specificity
-policy_basis:
-- policy:tag-governance-v1
-- policy:reuse-first-v1
+  - misses enriched PSPI data
+- alternative_id: alt.b
+  summary: aliased process fields may overwrite parsed ones with provenance
+  status: PREFERRED
+  tradeoffs:
+  - requires replay discipline
+constraints:
+- reuse-first
+- forensic-accountability
 evidence_refs:
-- cell-artifact-file-001
-- tt-001
-issued_by: decision-integrator-agent
-review_refs:
-- review:secops-steward-01
-confidence: 0.91
-timestamp: '2026-03-11T12:12:00Z'
+- cmp.process.v1
+- wit.004
+review:
+  status: APPROVED
+  required_roles:
+  - steward
+  - runtime-owner
+  approved_by:
+  - alice
+  - carol

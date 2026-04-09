@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://socioprophet.example/schemas/semantic_cell.schema.json",
   "title": "SemanticCell",
   "type": "object",
   "required": [
@@ -8,6 +7,7 @@
     "plane",
     "truth_class",
     "time_model",
+    "merge_model",
     "scope",
     "provenance",
     "payload",
@@ -15,17 +15,7 @@
   ],
   "properties": {
     "cell_id": {
-      "type": "string",
-      "minLength": 1
-    },
-    "object_kind": {
-      "type": "string"
-    },
-    "schema_version": {
-      "type": "string"
-    },
-    "semantic_version": {
-      "type": "string"
+      "$ref": "#/$defs/identifier"
     },
     "plane": {
       "enum": [
@@ -69,10 +59,12 @@
       "enum": [
         "NAMESPACE",
         "TENANT",
-        "GLOBAL"
+        "GLOBAL",
+        "REPO",
+        "DOMAIN"
       ]
     },
-    "surface_visibility": {
+    "surface_applicability": {
       "type": "array",
       "items": {
         "enum": [
@@ -80,29 +72,162 @@
           "RULES",
           "DASHBOARDS",
           "EXPORT",
-          "API",
+          "HIDDEN",
           "CONVERSATION",
-          "HIDDEN"
+          "API"
         ]
-      },
-      "uniqueItems": true
+      }
     },
-    "source": {
+    "surface_visibility": {
+      "enum": [
+        "VISIBLE",
+        "LIMITED",
+        "HIDDEN",
+        "REPLAY_ONLY",
+        "EXPORT_ONLY"
+      ]
+    },
+    "observed_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "validity": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "end": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "timeless": {
+          "type": "boolean"
+        },
+        "processing_time": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "payload": {
+      "$ref": "#/$defs/kvObject"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    },
+    "governance": {
       "type": "object",
       "required": [
-        "source_type"
+        "admissibility_tier",
+        "review_status"
+      ],
+      "properties": {
+        "admissibility_tier": {
+          "enum": [
+            "RAW",
+            "VALIDATED",
+            "GOVERNED",
+            "CANONICAL"
+          ]
+        },
+        "review_status": {
+          "enum": [
+            "NOT_REQUIRED",
+            "REQUIRED",
+            "PENDING",
+            "APPROVED",
+            "REJECTED",
+            "ESCALATED"
+          ]
+        },
+        "policy_basis": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exception_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "precision": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "EXACT",
+            "APPROX"
+          ]
+        },
+        "delta": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "replay": {
+      "type": "object",
+      "properties": {
+        "inputs_hash": {
+          "type": "string"
+        },
+        "config_hash": {
+          "type": "string"
+        },
+        "replayable": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kvObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_ref"
       ],
       "properties": {
         "source_type": {
-          "enum": [
-            "EVENT",
-            "ENTITY_CONTEXT",
-            "DERIVED_CONTEXT",
-            "GLOBAL_CONTEXT",
-            "SURFACE_COMPUTE",
-            "RULE_REPLAY",
-            "MANUAL_REVIEW"
-          ]
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
         },
         "vendor_name": {
           "type": "string"
@@ -113,69 +238,14 @@
         "feed_family": {
           "type": "string"
         },
-        "threat_feed_name": {
-          "type": "string"
-        },
         "namespace": {
           "type": "string"
-        }
-      },
-      "additionalProperties": true
-    },
-    "validity": {
-      "type": "object",
-      "properties": {
-        "observed_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "interval": {
-          "type": "object",
-          "properties": {
-            "start": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "end": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          "additionalProperties": false
-        },
-        "timeless": {
-          "type": "boolean"
-        },
-        "processing_time": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "replay_window_hours": {
-          "type": "number"
-        }
-      },
-      "additionalProperties": false
-    },
-    "provenance": {
-      "type": "object",
-      "required": [
-        "source_refs",
-        "hashes"
-      ],
-      "properties": {
-        "source_refs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "minItems": 1
         },
         "hashes": {
           "type": "array",
           "items": {
             "type": "string"
-          },
-          "minItems": 1
+          }
         },
         "witness_refs": {
           "type": "array",
@@ -183,28 +253,19 @@
             "type": "string"
           }
         },
-        "inputs_hash": {
-          "type": "string"
-        },
-        "config_hash": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "payload": {
-      "type": "object"
-    },
-    "lineage": {
-      "type": "object",
-      "properties": {
-        "parent_cells": {
+        "aliases": {
           "type": "array",
           "items": {
             "type": "string"
           }
-        },
-        "derived_from": {
+        }
+      },
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": {
           "type": "array",
           "items": {
             "type": "string"
@@ -213,55 +274,17 @@
         "branch_id": {
           "type": "string"
         },
-        "status": {
-          "enum": [
-            "NORMAL",
-            "APPROXIMATE",
-            "CONTESTED",
-            "REPLAYED"
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "governance": {
-      "type": "object",
-      "required": [
-        "admissibility_tier"
-      ],
-      "properties": {
-        "admissibility_tier": {
-          "enum": [
-            "RAW",
-            "VALIDATED",
-            "GOVERNED",
-            "CANONICAL",
-            "CONTESTED"
-          ]
+        "replay_id": {
+          "type": "string"
         },
-        "policy_refs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "review_required": {
-          "type": "boolean"
-        },
-        "exception_refs": {
+        "supersedes": {
           "type": "array",
           "items": {
             "type": "string"
           }
         }
       },
-      "additionalProperties": false
-    },
-    "tags": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "additionalProperties": true
     }
   },
   "additionalProperties": false

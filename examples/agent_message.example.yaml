@@ -1,22 +1,27 @@
-message_id: msg-001
-from_agent: context-enrichment-agent
-to_agent: surface-projection-agent
-message_kind: PROJECT_SEARCH_VIEW
-semantic_refs:
-- cell-user-dept-001
-- cell-artifact-file-001
-headers:
-  freshness_deadline: '2026-03-11T12:30:00Z'
-  capability_tokens:
-  - cap:project-search
-  - cap:read-entity
-  witness_refs:
-  - review:secops-steward-01
-  branch_id: mainline
-  approximate: false
-  surface_hints:
-  - SEARCH
-payload_ref: surface_projection:sp-001
-trace:
-  conversation_id: conv-001
-  sent_at: '2026-03-11T12:10:00Z'
+message_id: msg.001
+sender: agent.context.ingester
+recipient: agent.policy.reasoner
+sent_at: '2026-03-11T13:00:00Z'
+delivery_semantics: REPLAYABLE
+subject: proposed tag transition for asset criticality
+payload_ref: tt.001
+semantic_tags:
+- tag.topic.asset-criticality
+- tag.surface.rules
+capability_tokens:
+- cap.review.policy
+freshness_deadline: '2026-03-11T15:00:00Z'
+branch_id: branch.main
+witness_refs:
+- wit.001
+- wit.002
+governance:
+  admissibility_tier: VALIDATED
+  review_status: PENDING
+  policy_basis:
+  - secctx.v1
+  - msg.v1
+replay:
+  replayable: true
+  message_hash: sha256:111
+  config_hash: sha256:222
