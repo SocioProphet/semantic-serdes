@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/coordination_semaphore.schema.json",
+  "title": "CoordinationSemaphore",
+  "type": "object",
+  "required": ["semaphore_id", "scope", "permit_class", "fairness_mode", "pressure_mode", "resource_ref", "holders", "waiters", "provenance", "governance"],
+  "properties": {
+    "semaphore_id": {"type": "string", "minLength": 1},
+    "scope": {"enum": ["ROUTE", "CONTEXT", "RESOURCE", "BARRIER"]},
+    "permit_class": {"enum": ["NONE", "SHARED", "EXCLUSIVE"]},
+    "fairness_mode": {"enum": ["FIFO", "WEIGHTED", "AGED"]},
+    "pressure_mode": {"enum": ["NORMAL", "REVIEW", "SHED"]},
+    "resource_ref": {"type": "string"},
+    "holders": {"type": "array", "items": {"type": "string"}},
+    "waiters": {"type": "array", "items": {"type": "string"}},
+    "barrier_policy": {
+      "type": "object",
+      "properties": {
+        "quorum_size": {"type": "integer", "minimum": 0},
+        "timeout_seconds": {"type": "integer", "minimum": 0},
+        "preemption_allowed": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "policy_refs": {"type": "array", "items": {"type": "string"}},
+    "provenance": {
+      "type": "object",
+      "required": ["source_refs"],
+      "properties": {
+        "source_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["admissibility_tier"],
+      "properties": {
+        "admissibility_tier": {"enum": ["RAW", "VALIDATED", "GOVERNED", "CANONICAL", "CONTESTED"]},
+        "review_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "notes": {"type": "string"}
+  },
+  "additionalProperties": false
+}
