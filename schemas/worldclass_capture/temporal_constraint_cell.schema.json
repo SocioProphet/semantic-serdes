@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/temporal_constraint_cell.schema.json",
+  "title": "TemporalConstraintCell",
+  "type": "object",
+  "required": ["cell_id", "object_kind", "constraint_set_id", "constraint_type", "subject_ref", "provenance", "governance"],
+  "properties": {
+    "cell_id": {"type": "string", "minLength": 1},
+    "object_kind": {"const": "TEMPORAL_CONSTRAINT"},
+    "constraint_set_id": {"type": "string"},
+    "constraint_type": {"enum": ["BEFORE", "AFTER", "MEETS", "OVERLAPS", "CONTAINS", "DURING", "WINDOWED_BY", "DEADLINE", "MIN_GAP", "MAX_GAP", "SEQUENCE_ORDER"]},
+    "subject_ref": {"type": "string"},
+    "object_ref": {"type": "string"},
+    "ce_id": {"type": "string"},
+    "schema_ref": {"type": "string"},
+    "window": {
+      "type": "object",
+      "properties": {
+        "start": {"type": "string", "format": "date-time"},
+        "end": {"type": "string", "format": "date-time"},
+        "min_duration_seconds": {"type": "number", "minimum": 0},
+        "max_duration_seconds": {"type": "number", "minimum": 0},
+        "min_gap_seconds": {"type": "number", "minimum": 0},
+        "max_gap_seconds": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "description": {"type": "string"},
+        "priority": {"enum": ["SOFT", "HARD", "GUARDRAIL"]},
+        "violation_action": {"enum": ["WARN", "REVIEW", "BLOCK", "REPLAY"]}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source_refs", "hashes"],
+      "properties": {
+        "source_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "hashes": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["admissibility_tier"],
+      "properties": {
+        "admissibility_tier": {"enum": ["RAW", "VALIDATED", "GOVERNED", "CANONICAL", "CONTESTED"]},
+        "policy_refs": {"type": "array", "items": {"type": "string"}},
+        "review_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "tags": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
