@@ -1,0 +1,39 @@
+bundle_id: bh:intent-ce1002-v1
+bundle_kind: INTENT
+epoch_id: env-epoch-2026-04-04T06:00:00Z
+semantic_refs:
+  - cell-kairos-ce-001
+  - tcell-chrono-001
+schema_refs:
+  - schema:coordinated-attack-precursor
+temporal_refs:
+  - chrono-precursor-v1
+grounding_refs:
+  - cell-cskg-precursor-001
+environment_refs:
+  - env-openai-sandbox-2026-04-04
+defaults:
+  phase_code: str
+  topic_code: sch
+  state243: verified-review-local
+  route_h: rh:precursor-evidence-stream
+  context_h: ch:ce1002-prep-window
+  environment_h: eh:artifact-root
+distribution:
+  cadence: MESOBEAT
+  stream_reusable: true
+  delta_mode: FULL
+  valid_from: '2026-04-04T06:00:00Z'
+provenance:
+  source_refs:
+    - wire-projection:wsp-precursor-001
+  hashes:
+    - sha256:beacon-context-bundle-001
+governance:
+  admissibility_tier: GOVERNED
+  policy_refs:
+    - policy:precursor-review-v1
+  review_required: true
+  replay_required: true
+notes: >
+  Carries the mesobeat intent bundle for the CE instance and its temporal/grounding context.
