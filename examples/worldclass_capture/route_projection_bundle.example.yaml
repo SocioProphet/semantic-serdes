@@ -1,0 +1,21 @@
+route_id: route:/news/im/:id
+route_pattern: /news/im/:id
+family_ref: family:news-intel
+projection_refs:
+  - projection:news-item-detail
+semantic_refs:
+  - cell:news-item
+  - cell:ims-context
+  - cell:alerts-rules
+surface_kind: NEWS
+default_bundle_ref: bundle:news-item-detail
+provenance:
+  source_refs:
+    - artifact:route_api_mapping_competitor_csv
+  hashes:
+    - sha256:route-projection-news-item-001
+governance:
+  admissibility_tier: VALIDATED
+  review_required: true
+notes: >
+  Example route projection bundle connecting one route pattern to its family and canonical semantic/projection refs.
