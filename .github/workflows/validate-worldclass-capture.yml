@@ -1,0 +1,43 @@
+name: validate-worldclass-capture
+
+on:
+  pull_request:
+    paths:
+      - "schemas/worldclass_capture/**"
+      - "examples/worldclass_capture/**"
+      - ".github/workflows/validate-worldclass-capture.yml"
+  push:
+    branches: [ main ]
+    paths:
+      - "schemas/worldclass_capture/**"
+      - "examples/worldclass_capture/**"
+      - ".github/workflows/validate-worldclass-capture.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema
+      - name: Validate worldclass capture examples
+        run: |
+          python tools/validate_semantic_serdes.py --schema-dir schemas/worldclass_capture \
+            wire_semantic_projection.schema.json:examples/worldclass_capture/wire_semantic_projection.example.yaml \
+            environment_epoch_bundle.schema.json:examples/worldclass_capture/environment_epoch_bundle.example.yaml \
+            export_boundary_policy_cell.schema.json:examples/worldclass_capture/export_boundary_policy_cell.example.yaml \
+            artifact_commit_bundle.schema.json:examples/worldclass_capture/artifact_commit_bundle.example.yaml \
+            beacon_context_bundle.schema.json:examples/worldclass_capture/beacon_context_bundle.example.yaml \
+            coordination_semaphore.schema.json:examples/worldclass_capture/coordination_semaphore.example.yaml \
+            temporal_constraint_cell.schema.json:examples/worldclass_capture/temporal_constraint_cell.example.yaml \
+            code_bundle_cell.schema.json:examples/worldclass_capture/code_bundle_cell.example.yaml \
+            symbol_cell.schema.json:examples/worldclass_capture/symbol_cell.example.yaml \
+            recovery_claim.schema.json:examples/worldclass_capture/recovery_claim.example.yaml \
+            surface_family_bundle.schema.json:examples/worldclass_capture/surface_family_bundle.example.yaml \
+            route_projection_bundle.schema.json:examples/worldclass_capture/route_projection_bundle.example.yaml
