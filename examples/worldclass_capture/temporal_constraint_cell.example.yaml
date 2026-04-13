@@ -1,0 +1,29 @@
+cell_id: tcell-chrono-001
+object_kind: TEMPORAL_CONSTRAINT
+constraint_set_id: chrono-precursor-v1
+constraint_type: SEQUENCE_ORDER
+subject_ref: step:training
+object_ref: step:vehicle-acquisition
+ce_id: ce1002
+schema_ref: schema:coordinated-attack-precursor
+window:
+  min_gap_seconds: 0
+  max_gap_seconds: 2592000
+payload:
+  description: training must precede vehicle acquisition within a bounded preparation window
+  priority: HARD
+  violation_action: REVIEW
+provenance:
+  source_refs:
+    - ontology:CHRONOS.ttl
+    - review:temporal-model-01
+  hashes:
+    - sha256:chrono-constraint-001
+governance:
+  admissibility_tier: GOVERNED
+  policy_refs:
+    - policy:precursor-review-v1
+  review_required: true
+tags:
+  - chronology
+  - sequence
