@@ -1,0 +1,12 @@
+counterexample_id: counterexample.hdt.export.001
+scope_ref: planning.scope.hdt.export.001
+target_ref: progcand.hdt.export.001
+input_ref: test://hdt/export-case/001
+expected_ref: expected://consent-current
+observed_ref: observed://consent-stale
+result: FOUND
+reason: candidate passes compile but fails freshness semantics
+evidence_refs:
+  - evidence://hdt/consent/record-2026-04-01
+lineage:
+  branch_id: branch.hdt.export.repair-consent

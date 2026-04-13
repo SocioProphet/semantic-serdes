@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CounterexampleArtifact",
+  "type": "object",
+  "required": [
+    "counterexample_id",
+    "scope_ref",
+    "target_ref",
+    "input_ref",
+    "expected_ref",
+    "observed_ref",
+    "result"
+  ],
+  "properties": {
+    "counterexample_id": { "$ref": "#/$defs/identifier" },
+    "scope_ref": { "type": "string" },
+    "target_ref": { "type": "string" },
+    "input_ref": { "type": "string" },
+    "expected_ref": { "type": "string" },
+    "observed_ref": { "type": "string" },
+    "result": {
+      "enum": ["NONE_FOUND", "FOUND", "INCONCLUSIVE"]
+    },
+    "reason": { "type": "string" },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "lineage": { "$ref": "#/$defs/lineage" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "minLength": 1 },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": { "type": "array", "items": { "type": "string" } },
+        "branch_id": { "type": "string" },
+        "replay_id": { "type": "string" },
+        "supersedes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

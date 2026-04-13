@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProgramCandidateArtifact",
+  "type": "object",
+  "required": [
+    "program_candidate_id",
+    "scope_ref",
+    "source_plan_node_ref",
+    "status",
+    "candidate_language",
+    "candidate_text",
+    "compile_result",
+    "execution_result"
+  ],
+  "properties": {
+    "program_candidate_id": { "$ref": "#/$defs/identifier" },
+    "scope_ref": { "type": "string" },
+    "source_plan_node_ref": { "type": "string" },
+    "status": {
+      "enum": ["PROPOSED", "COMPILED", "EXECUTED", "VERIFIED", "REJECTED"]
+    },
+    "candidate_language": {
+      "enum": ["PYTHON", "DSL", "PSEUDOCODE", "OTHER"]
+    },
+    "candidate_text": { "type": "string" },
+    "compile_result": {
+      "type": "object",
+      "required": ["compiled"],
+      "properties": {
+        "compiled": { "type": "boolean" },
+        "compiler_output": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "execution_result": {
+      "type": "object",
+      "required": ["executed"],
+      "properties": {
+        "executed": { "type": "boolean" },
+        "passed_case_count": { "type": "integer", "minimum": 0 },
+        "failed_case_count": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "counterexample_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "governance": {
+      "type": "object",
+      "required": ["admissibility_tier", "review_status"],
+      "properties": {
+        "admissibility_tier": {
+          "enum": ["RAW", "VALIDATED", "GOVERNED", "CANONICAL"]
+        },
+        "review_status": {
+          "enum": ["NOT_REQUIRED", "REQUIRED", "PENDING", "APPROVED", "REJECTED", "ESCALATED"]
+        },
+        "policy_basis": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lineage": { "$ref": "#/$defs/lineage" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "minLength": 1 },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parent_ids": { "type": "array", "items": { "type": "string" } },
+        "branch_id": { "type": "string" },
+        "replay_id": { "type": "string" },
+        "supersedes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

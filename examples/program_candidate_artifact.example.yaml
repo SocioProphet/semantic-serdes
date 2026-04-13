@@ -1,0 +1,24 @@
+program_candidate_id: progcand.hdt.export.001
+scope_ref: planning.scope.hdt.export.001
+source_plan_node_ref: planning://plan-node/plan.node.hdt.repair-consent.001
+status: EXECUTED
+candidate_language: PYTHON
+candidate_text: |
+  def rule(x):
+    return refresh_consent(x)
+compile_result:
+  compiled: true
+  compiler_output: ""
+execution_result:
+  executed: true
+  passed_case_count: 4
+  failed_case_count: 1
+counterexample_refs:
+  - counterexample://hdt/export/001
+governance:
+  admissibility_tier: GOVERNED
+  review_status: REQUIRED
+  policy_basis:
+    - policy-fabric://branch-admissibility/abstract
+lineage:
+  branch_id: branch.hdt.export.repair-consent
