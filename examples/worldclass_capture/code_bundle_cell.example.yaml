@@ -1,0 +1,24 @@
+cell_id: codebundle:untitledb2
+object_kind: CODE_BUNDLE
+bundle_label: untitledb2
+language: JAVASCRIPT
+import_refs:
+  - import:chunk-1d0f9f90.js
+section_refs:
+  - section:imports
+  - section:declarations
+  - section:functions
+  - section:classes
+export_refs:
+  - export:default
+semantic_posture: NAVIGATION_ORIENTED
+provenance:
+  source_refs:
+    - artifact:untitledb2_tree_enriched_v2.json
+  hashes:
+    - sha256:untitledb2-tree-001
+governance:
+  admissibility_tier: VALIDATED
+  review_required: true
+notes: >
+  Structured bundle representation derived from an enriched symbol tree where most recovered labels remain helper/alias oriented.

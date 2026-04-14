@@ -1,0 +1,24 @@
+family_id: family:news-intel
+family_name: News Intelligence
+semantic_refs:
+  - cell:news-items-canonical
+  - cell:ims-context
+  - cell:search-substrate
+route_patterns:
+  - /news
+  - /news/recent
+  - /news/calendar
+projection_refs:
+  - projection:news-search
+  - projection:news-calendar
+bundle_kind: NEWS_FAMILY
+provenance:
+  source_refs:
+    - artifact:route_api_mapping_competitor_csv
+  hashes:
+    - sha256:surface-family-news-001
+governance:
+  admissibility_tier: VALIDATED
+  review_required: true
+notes: >
+  Example family bundle derived from clustered route-to-substrate analysis.

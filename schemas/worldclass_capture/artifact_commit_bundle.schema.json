@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/artifact_commit_bundle.schema.json",
+  "title": "ArtifactCommitBundle",
+  "type": "object",
+  "required": [
+    "commit_id",
+    "epoch_id",
+    "artifact_refs",
+    "hash_refs",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "commit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "epoch_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "included_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blocked_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "manifest_ref": {
+      "type": "string"
+    },
+    "hash_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "policy_ref": {
+      "type": "string"
+    },
+    "replay_ref": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_refs"
+      ],
+      "properties": {
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "admissibility_tier"
+      ],
+      "properties": {
+        "admissibility_tier": {
+          "enum": [
+            "RAW",
+            "VALIDATED",
+            "GOVERNED",
+            "CANONICAL",
+            "CONTESTED"
+          ]
+        },
+        "review_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,24 @@
+claim_id: claim:untitledb2:transport-wrapper-001
+bundle_ref: codebundle:untitledb2
+target_ref: symbol:untitledb2:function:ga
+claim_kind: SYMBOL_ROLE
+claim_label: transport client wrapper
+confidence: 0.62
+basis_refs:
+  - symbol:untitledb2:function:ga
+  - artifact:untitledb2_tree_enriched_v2.json
+supersedes: []
+runtime_witness_refs:
+  - witness:network-trace-001
+provenance:
+  source_refs:
+    - artifact:untitledb2_tree_enriched_v2.json
+    - trace:browser-runtime-observation-001
+  hashes:
+    - sha256:recovery-claim-001
+governance:
+  admissibility_tier: VALIDATED
+  review_required: true
+  status: PROPOSED
+notes: >
+  Example recovery claim tying a symbol to a likely transport role with both static and runtime witness inputs.

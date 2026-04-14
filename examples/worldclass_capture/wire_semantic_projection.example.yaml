@@ -1,0 +1,53 @@
+projection_id: wire-projection-001
+epoch_id: env-epoch-2026-04-04T06:00:00Z
+codebook_version: "1.0.0"
+cycle_version: "2026-04-04"
+source_cells:
+  - cell:symbol-cell-001
+  - cell:temporal-constraint-001
+schema_refs:
+  - schema:wire_semantic_projection.schema.json
+temporal_refs:
+  - temporal:constraint-cell-001
+grounding_refs:
+  - grounding:worldclass-v1
+environment_refs:
+  - env:sandbox-epoch-001
+hot_coordinate:
+  phase_code: PHASE_WIRE
+  topic_code: TOPIC_SEMANTIC
+  phase_index: 1
+  topic_index: 2
+  state243_ref: state243:wire-001
+handle_bindings:
+  route_h: handle:route-wire-001
+  context_h: handle:context-wire-001
+  schema_h: handle:schema-wire-001
+  bundle_h: handle:bundle-wire-001
+placement_policy:
+  default_cadence: MICROBEAT
+  hot_frame_allowed: true
+  stream_inheritable: true
+  beacon_allowed: false
+  inline_override_allowed: false
+  repair_mode: DELTA_FIRST
+resolver:
+  alias_group_ids:
+    - alias-group:wire-001
+  transition_refs:
+    - transition:wire-epoch-001
+  replay_required: false
+  epoch_rollover_policy: GRACE
+provenance:
+  source_refs:
+    - run:sandbox-wire-session-001
+  hashes:
+    - sha256:wire-projection-001
+governance:
+  admissibility_tier: VALIDATED
+  policy_refs:
+    - policy:wire-governance-v1
+  review_required: false
+notes: >
+  Demonstrates a wire semantic projection binding source cells to a hot coordinate,
+  with MICROBEAT cadence, delta-first repair, and GRACE epoch rollover policy.

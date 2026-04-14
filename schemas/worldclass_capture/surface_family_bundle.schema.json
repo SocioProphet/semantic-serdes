@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/surface_family_bundle.schema.json",
+  "title": "SurfaceFamilyBundle",
+  "type": "object",
+  "required": ["family_id", "family_name", "semantic_refs", "route_patterns", "projection_refs", "provenance", "governance"],
+  "properties": {
+    "family_id": {"type": "string", "minLength": 1},
+    "family_name": {"type": "string"},
+    "semantic_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "route_patterns": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "projection_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "bundle_kind": {"enum": ["SEARCH_FAMILY", "CASE_FAMILY", "FLOW_FAMILY", "NEWS_FAMILY", "CONTROL_FAMILY"]},
+    "provenance": {
+      "type": "object",
+      "required": ["source_refs"],
+      "properties": {
+        "source_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "hashes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["admissibility_tier"],
+      "properties": {
+        "admissibility_tier": {"enum": ["RAW", "VALIDATED", "GOVERNED", "CANONICAL", "CONTESTED"]},
+        "review_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "notes": {"type": "string"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,35 @@
+cell_id: symbol:untitledb2:function:ga
+object_kind: SYMBOL
+symbol_id: ga
+bundle_ref: codebundle:untitledb2
+symbol_kind: FUNCTION
+section_ref: section:functions
+display_label: ga
+recovered_label: helper/alias (obfuscated)
+static_features:
+  parameter_count: 2
+  literal_affinity:
+    - fetch
+    - headers
+  call_degree: 7
+  exported: false
+semantic_hypotheses:
+  - label: transport client wrapper
+    confidence: 0.62
+    basis_refs:
+      - artifact:untitledb2_tree_enriched_v2.json
+  - label: generic request helper
+    confidence: 0.55
+    basis_refs:
+      - artifact:untitledb2_tree_enriched_v2.json
+provenance:
+  source_refs:
+    - artifact:untitledb2_tree_enriched_v2.json
+  hashes:
+    - sha256:untitledb2-symbol-ga
+governance:
+  admissibility_tier: VALIDATED
+  review_required: true
+  status: APPROXIMATE
+notes: >
+  Example symbol recovery object for a heavily obfuscated function with competing semantic hypotheses.

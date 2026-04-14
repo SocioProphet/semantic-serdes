@@ -1,0 +1,24 @@
+semaphore_id: sem:artifact-export-lane
+scope: RESOURCE
+permit_class: EXCLUSIVE
+fairness_mode: AGED
+pressure_mode: REVIEW
+resource_ref: resource:artifact-export
+holders:
+  - agent:artifact-commit-writer
+waiters:
+  - agent:bundle-export-worker
+barrier_policy:
+  quorum_size: 1
+  timeout_seconds: 300
+  preemption_allowed: false
+policy_refs:
+  - policy:export-boundary-v1
+provenance:
+  source_refs:
+    - fixture:artifact-commit-sequence-001
+governance:
+  admissibility_tier: GOVERNED
+  review_required: false
+notes: >
+  Exclusive export lane semaphore used to prevent concurrent packaging or boundary-crossing artifact emission.
