@@ -1,0 +1,64 @@
+receipt_id: shir.receipt.sourceos.topolvm.projection.001
+kind: Receipt
+receipt_type: PROJECTION
+created_at: '2026-05-04T15:49:00Z'
+compiler:
+  name: shir-projection-compiler
+  version: 0.1.0-draft
+  commit_sha: demo
+  runtime: python-jsonschema-manifest
+ontology_profile:
+  profile_id: ontogenesis.shir.v0.1
+  version: 0.1.0-draft
+  module_refs:
+    - https://github.com/SocioProphet/ontogenesis/blob/main/docs/specs/shir-v0.1.md
+  shape_refs:
+    - shapes://pending/shir-core
+source_hashes:
+  - algorithm: sha256
+    value: sourceos-storage-input-demo
+    artifact_ref: docs://sourceos/agent-machine-storage
+transform:
+  transform_id: transform.shir.to.pyg.demo.001
+  transform_type: SHIR_TO_PYG
+  config_hash: sha256:sourceos-shir-pyg-config-demo
+  parameters:
+    preserve_nary_as_relation_nodes: true
+    export_policy_refs_out_of_band: true
+model:
+  model_id: none
+  model_version: none
+  provider: none
+policy_decision:
+  decision: ALLOW
+  policy_basis:
+    - policy.public_technical_docs.allowed_for_training
+    - shir.v0.1.projection_loss_report_present
+  decided_at: '2026-05-04T15:49:10Z'
+  decision_ref: policy.decision.sourceos.topolvm.projection.001
+projection_loss_report_ref: shir.loss.sourceos.topolvm.pyg.001
+semantic_leakage_checked: true
+outputs:
+  - artifact_ref: artifacts://shir/sourceos-topolvm-pyg-manifest.json
+    artifact_type: PYG_MANIFEST
+    hash:
+      algorithm: sha256
+      value: sourceos-topolvm-pyg-manifest-demo
+      artifact_ref: artifacts://shir/sourceos-topolvm-pyg-manifest.json
+  - artifact_ref: artifacts://shir/sourceos-topolvm-loss-report.yaml
+    artifact_type: PROJECTION_LOSS_REPORT
+    hash:
+      algorithm: sha256
+      value: sourceos-topolvm-loss-report-demo
+      artifact_ref: artifacts://shir/sourceos-topolvm-loss-report.yaml
+replay:
+  replayable: true
+  inputs_hash: sha256:sourceos-shir-projection-input-demo
+  config_hash: sha256:sourceos-shir-pyg-config-demo
+  deterministic_seed: 7
+  environment_ref: container://semantic-serdes-validator-demo
+signatures:
+  - signature_type: unsigned-demo
+    signature_ref: signature://pending
+    signer_ref: signer://pending
+notes: Receipt captures the projection decision and binds output artifacts to source hashes, ontology profile, projection loss, and replay metadata.
