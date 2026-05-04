@@ -1,0 +1,53 @@
+assertion_id: shir.candidate.sourceos.topolvm.provisions.pv.001
+kind: CandidateAssertion
+candidate_status: EXTRACTED
+plane: DERIVED
+truth_class: INFERRED
+time_model: SNAPSHOT
+source:
+  source_type: TEXT_SPAN
+  source_ref: docs://sourceos/agent-machine-storage#p17
+  source_hash: sha256:sourceos-agent-machine-storage-demo
+  snapshot_ref: snapshot://sourceos-storage-2026-05-04
+subject:
+  id: entity.topolvm
+  label: TopoLVM
+  type: Technology
+  iri: https://socioprophet.github.io/ontogenesis/shir#TopoLVM
+predicate:
+  id: relation.provisions
+  label: provisions
+  iri: https://socioprophet.github.io/ontogenesis/shir#provisions
+object:
+  id: entity.kubernetes.persistent_volume
+  label: PersistentVolume
+  type: StorageResource
+  iri: https://socioprophet.github.io/ontogenesis/shir#PersistentVolume
+evidence_anchors:
+  - anchor_id: anchor.sourceos.storage.p17.s1
+    anchor_type: TEXT_SPAN
+    artifact_ref: docs://sourceos/agent-machine-storage
+    selector:
+      paragraph: 17
+      start_char: 0
+      end_char: 68
+      text: TopoLVM provisions local persistent volumes for Kubernetes nodes.
+induction_trace:
+  extractor_id: extractor.rule.sourceos-storage.v0
+  method: RULE
+  run_id: run.shir.induction.2026-05-04.001
+  created_at: '2026-05-04T15:45:00Z'
+confidence: 0.82
+governance:
+  admissibility_tier: RAW
+  review_status: REQUIRED
+  policy_basis:
+    - shir.v0.1.candidate_requires_review
+leakage_markers:
+  - NONE
+replay:
+  inputs_hash: sha256:sourceos-storage-input-demo
+  config_hash: sha256:sourceos-storage-rule-config-demo
+  replayable: true
+  deterministic_seed: 7
+notes: Candidate assertion extracted from technical storage documentation; not promoted until ontology and linkage checks pass.

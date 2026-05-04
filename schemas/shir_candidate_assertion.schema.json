@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SHIRCandidateAssertion",
+  "type": "object",
+  "required": [
+    "assertion_id",
+    "kind",
+    "candidate_status",
+    "plane",
+    "truth_class",
+    "time_model",
+    "source",
+    "subject",
+    "predicate",
+    "object",
+    "evidence_anchors",
+    "induction_trace",
+    "confidence",
+    "governance",
+    "replay"
+  ],
+  "properties": {
+    "assertion_id": { "$ref": "#/$defs/identifier" },
+    "kind": { "const": "CandidateAssertion" },
+    "candidate_status": {
+      "enum": ["EXTRACTED", "LINKED", "VALIDATED", "PROMOTED", "QUARANTINED", "REJECTED"]
+    },
+    "plane": { "enum": ["RAW", "EVENT", "ENTITY", "DERIVED", "GLOBAL", "SURFACE"] },
+    "truth_class": { "enum": ["OBSERVED", "ASSERTED", "INFERRED", "REPUTED"] },
+    "time_model": { "enum": ["INSTANT", "INTERVAL", "SNAPSHOT", "TIMELESS", "QUERY_WINDOW"] },
+    "source": { "$ref": "#/$defs/source" },
+    "subject": { "$ref": "#/$defs/term" },
+    "predicate": { "$ref": "#/$defs/predicate" },
+    "object": { "$ref": "#/$defs/term" },
+    "evidence_anchors": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/anchor" }
+    },
+    "induction_trace": { "$ref": "#/$defs/inductionTrace" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "governance": { "$ref": "#/$defs/governance" },
+    "leakage_markers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "replay": { "$ref": "#/$defs/replay" },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "source": {
+      "type": "object",
+      "required": ["source_type", "source_ref"],
+      "properties": {
+        "source_type": { "type": "string" },
+        "source_ref": { "type": "string" },
+        "source_hash": { "type": "string" },
+        "snapshot_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "term": {
+      "type": "object",
+      "required": ["id", "label", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "type": { "type": "string" },
+        "iri": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "predicate": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "iri": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "anchor": {
+      "type": "object",
+      "required": ["anchor_id", "anchor_type", "artifact_ref", "selector"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_type": { "enum": ["TEXT_SPAN", "TABLE_CELL", "TABLE_COLUMN", "RDF_TRIPLE", "IMAGE_REGION", "VIDEO_INTERVAL", "AUDIO_INTERVAL", "CODE_RANGE", "LOG_EVENT", "FULL_RESOURCE"] },
+        "artifact_ref": { "type": "string" },
+        "selector": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    },
+    "inductionTrace": {
+      "type": "object",
+      "required": ["extractor_id", "method", "run_id", "created_at"],
+      "properties": {
+        "extractor_id": { "type": "string" },
+        "method": { "enum": ["RULE", "LLM", "PARSER", "RDF_PARSE", "TABLE_PROFILE", "EMBEDDING", "HUMAN"] },
+        "run_id": { "type": "string" },
+        "created_at": { "$ref": "#/$defs/timestamp" },
+        "model_ref": { "type": "string" },
+        "prompt_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["admissibility_tier", "review_status"],
+      "properties": {
+        "admissibility_tier": { "enum": ["RAW", "VALIDATED", "GOVERNED", "CANONICAL"] },
+        "review_status": { "enum": ["NOT_REQUIRED", "REQUIRED", "PENDING", "APPROVED", "REJECTED", "ESCALATED"] },
+        "policy_basis": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "replay": {
+      "type": "object",
+      "required": ["inputs_hash", "config_hash", "replayable"],
+      "properties": {
+        "inputs_hash": { "type": "string" },
+        "config_hash": { "type": "string" },
+        "replayable": { "type": "boolean" },
+        "deterministic_seed": { "type": "integer" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

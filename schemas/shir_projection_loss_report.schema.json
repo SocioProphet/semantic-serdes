@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SHIRProjectionLossReport",
+  "type": "object",
+  "required": [
+    "report_id",
+    "kind",
+    "projection_ref",
+    "source_representation",
+    "target_representation",
+    "loss_items",
+    "semantic_leakage",
+    "governance",
+    "receipt_ref",
+    "replay"
+  ],
+  "properties": {
+    "report_id": { "$ref": "#/$defs/identifier" },
+    "kind": { "const": "ProjectionLossReport" },
+    "projection_ref": { "type": "string" },
+    "source_representation": { "enum": ["SHIR", "RDF", "HK_COMPATIBLE_JSON", "PROPERTY_GRAPH", "FEATURE_TABLE", "VECTOR_INDEX", "GRAPH_ML", "HYPERGRAPH_TENSOR", "GRAPHRAG_CORPUS"] },
+    "target_representation": { "enum": ["SHIR", "RDF", "HK_COMPATIBLE_JSON", "PROPERTY_GRAPH", "PYG_HETERODATA", "DGL_HETEROGRAPH", "FEATURE_TABLE", "VECTOR_INDEX", "GRAPH_ML", "HYPERGRAPH_TENSOR", "GRAPHRAG_CORPUS", "AGENT_MEMORY_CAPSULE"] },
+    "loss_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/lossItem" }
+    },
+    "semantic_leakage": { "$ref": "#/$defs/semanticLeakage" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "receipt_ref": { "type": "string" },
+    "replay": { "$ref": "#/$defs/replay" },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "lossItem": {
+      "type": "object",
+      "required": ["semantic_dimension", "loss_mode", "source_ref", "explanation"],
+      "properties": {
+        "semantic_dimension": {
+          "enum": ["N_ARY_RELATION", "HIGHER_ORDER_RELATION", "TEMPORAL_SCOPE", "OBSERVATION_TIME", "EVIDENCE_ANCHOR", "PROVENANCE", "POLICY_SCOPE", "CONTEXT", "CONFIDENCE", "CURATION_STATE", "NOISE_ASSESSMENT", "IDENTITY_CANONICALIZATION", "DATATYPE", "LANGUAGE_TAG", "UNIT", "NAMED_GRAPH", "RDF_STAR_METADATA"]
+        },
+        "loss_mode": { "enum": ["PRESERVED", "TRANSFORMED", "APPROXIMATED", "DROPPED", "ENCODED_INDIRECTLY", "REQUIRES_EXTERNAL_LOOKUP"] },
+        "source_ref": { "type": "string" },
+        "target_ref": { "type": "string" },
+        "explanation": { "type": "string" },
+        "severity": { "enum": ["INFO", "LOW", "MEDIUM", "HIGH", "BLOCKING"] }
+      },
+      "additionalProperties": false
+    },
+    "semanticLeakage": {
+      "type": "object",
+      "required": ["checked", "risk_level", "markers"],
+      "properties": {
+        "checked": { "type": "boolean" },
+        "risk_level": { "enum": ["NONE", "LOW", "MEDIUM", "HIGH", "BLOCKING", "UNKNOWN"] },
+        "markers": {
+          "type": "array",
+          "items": {
+            "enum": ["RDF_TYPE_LABEL", "ONTOLOGY_HIERARCHY", "GRAPH_PARTITION", "SOURCE_FILENAME", "FUTURE_TIMESTAMP", "PROVENANCE_FIELD", "NAMING_CONVENTION", "TARGET_PROPERTY", "TRAIN_TEST_CONTAMINATION", "NONE"]
+          }
+        },
+        "mitigations": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["review_status", "export_allowed", "training_allowed"],
+      "properties": {
+        "review_status": { "enum": ["NOT_REQUIRED", "REQUIRED", "PENDING", "APPROVED", "REJECTED", "ESCALATED"] },
+        "export_allowed": { "type": "boolean" },
+        "training_allowed": { "type": "boolean" },
+        "policy_basis": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "replay": {
+      "type": "object",
+      "required": ["inputs_hash", "config_hash", "replayable"],
+      "properties": {
+        "inputs_hash": { "type": "string" },
+        "config_hash": { "type": "string" },
+        "replayable": { "type": "boolean" },
+        "created_at": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

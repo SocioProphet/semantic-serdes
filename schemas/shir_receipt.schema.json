@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SHIRReceipt",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "kind",
+    "receipt_type",
+    "created_at",
+    "compiler",
+    "ontology_profile",
+    "source_hashes",
+    "transform",
+    "policy_decision",
+    "outputs",
+    "replay"
+  ],
+  "properties": {
+    "receipt_id": { "$ref": "#/$defs/identifier" },
+    "kind": { "const": "Receipt" },
+    "receipt_type": { "enum": ["INGEST", "INDUCTION", "VALIDATION", "CURATION", "PROJECTION", "TRAINING", "EVALUATION", "PUBLICATION", "ROLLBACK"] },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "compiler": { "$ref": "#/$defs/compiler" },
+    "ontology_profile": { "$ref": "#/$defs/ontologyProfile" },
+    "source_hashes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/hashRef" } },
+    "transform": { "$ref": "#/$defs/transform" },
+    "model": { "$ref": "#/$defs/modelRef" },
+    "policy_decision": { "$ref": "#/$defs/policyDecision" },
+    "projection_loss_report_ref": { "type": "string" },
+    "semantic_leakage_checked": { "type": "boolean" },
+    "outputs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/outputArtifact" } },
+    "replay": { "$ref": "#/$defs/replay" },
+    "signatures": { "type": "array", "items": { "$ref": "#/$defs/signature" } },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "compiler": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "commit_sha": { "type": "string" },
+        "runtime": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "ontologyProfile": {
+      "type": "object",
+      "required": ["profile_id", "version"],
+      "properties": {
+        "profile_id": { "type": "string" },
+        "version": { "type": "string" },
+        "module_refs": { "type": "array", "items": { "type": "string" } },
+        "shape_refs": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "hashRef": {
+      "type": "object",
+      "required": ["algorithm", "value", "artifact_ref"],
+      "properties": {
+        "algorithm": { "enum": ["sha256", "sha512", "blake3"] },
+        "value": { "type": "string" },
+        "artifact_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "transform": {
+      "type": "object",
+      "required": ["transform_id", "transform_type", "config_hash"],
+      "properties": {
+        "transform_id": { "type": "string" },
+        "transform_type": { "enum": ["RDF_TO_SHIR", "SHIR_TO_RDF", "TEXT_TO_CANDIDATE_ASSERTION", "TABLE_TO_LINKAGE_CANDIDATE", "SHIR_TO_PYG", "SHIR_TO_DGL", "SHIR_TO_VECTOR_INDEX", "SHIR_TO_GRAPHRAG", "VALIDATION", "CURATION"] },
+        "config_hash": { "type": "string" },
+        "parameters": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    },
+    "modelRef": {
+      "type": "object",
+      "required": ["model_id"],
+      "properties": {
+        "model_id": { "type": "string" },
+        "model_version": { "type": "string" },
+        "provider": { "type": "string" },
+        "weights_hash": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "policyDecision": {
+      "type": "object",
+      "required": ["decision", "policy_basis", "decided_at"],
+      "properties": {
+        "decision": { "enum": ["ALLOW", "DENY", "ALLOW_WITH_REDACTION", "QUARANTINE", "REVIEW_REQUIRED"] },
+        "policy_basis": { "type": "array", "items": { "type": "string" } },
+        "decided_at": { "$ref": "#/$defs/timestamp" },
+        "decision_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "outputArtifact": {
+      "type": "object",
+      "required": ["artifact_ref", "artifact_type", "hash"],
+      "properties": {
+        "artifact_ref": { "type": "string" },
+        "artifact_type": { "enum": ["SHIR_JSON", "RDF", "PYG_MANIFEST", "DGL_MANIFEST", "FEATURE_TABLE", "VECTOR_INDEX_MANIFEST", "GRAPHRAG_CORPUS", "PROJECTION_LOSS_REPORT", "VALIDATION_REPORT"] },
+        "hash": { "$ref": "#/$defs/hashRef" }
+      },
+      "additionalProperties": false
+    },
+    "replay": {
+      "type": "object",
+      "required": ["replayable", "inputs_hash", "config_hash"],
+      "properties": {
+        "replayable": { "type": "boolean" },
+        "inputs_hash": { "type": "string" },
+        "config_hash": { "type": "string" },
+        "deterministic_seed": { "type": "integer" },
+        "environment_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "signature": {
+      "type": "object",
+      "required": ["signature_type", "signature_ref"],
+      "properties": {
+        "signature_type": { "type": "string" },
+        "signature_ref": { "type": "string" },
+        "signer_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

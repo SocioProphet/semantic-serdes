@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SHIRAssertion",
+  "type": "object",
+  "required": [
+    "assertion_id",
+    "kind",
+    "assertion_status",
+    "plane",
+    "truth_class",
+    "time_model",
+    "connector",
+    "role_bindings",
+    "context",
+    "temporal_scope",
+    "policy_scope",
+    "evidence_anchors",
+    "governance",
+    "receipt_ref"
+  ],
+  "properties": {
+    "assertion_id": { "$ref": "#/$defs/identifier" },
+    "kind": { "const": "Assertion" },
+    "assertion_status": { "enum": ["ASSERTED", "VALIDATED", "GOVERNED", "CANONICAL", "RETRACTED", "SUPERSEDED"] },
+    "plane": { "enum": ["RAW", "EVENT", "ENTITY", "DERIVED", "GLOBAL", "SURFACE"] },
+    "truth_class": { "enum": ["OBSERVED", "ASSERTED", "INFERRED", "REPUTED"] },
+    "time_model": { "enum": ["INSTANT", "INTERVAL", "SNAPSHOT", "TIMELESS", "QUERY_WINDOW"] },
+    "connector": { "$ref": "#/$defs/connector" },
+    "role_bindings": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/roleBinding" }
+    },
+    "context": { "$ref": "#/$defs/context" },
+    "temporal_scope": { "$ref": "#/$defs/temporalScope" },
+    "policy_scope": { "$ref": "#/$defs/policyScope" },
+    "evidence_anchors": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/anchor" }
+    },
+    "governance": { "$ref": "#/$defs/governance" },
+    "receipt_ref": { "type": "string" },
+    "source_candidate_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "noise_assessments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/noiseAssessment" }
+    }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "connector": {
+      "type": "object",
+      "required": ["connector_id", "label", "roles"],
+      "properties": {
+        "connector_id": { "type": "string" },
+        "label": { "type": "string" },
+        "iri": { "type": "string" },
+        "roles": { "type": "array", "minItems": 2, "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "roleBinding": {
+      "type": "object",
+      "required": ["role", "participant_id", "participant_type"],
+      "properties": {
+        "role": { "type": "string" },
+        "participant_id": { "type": "string" },
+        "participant_type": { "enum": ["NODE", "ANCHOR", "CONTEXT", "ASSERTION", "POLICY", "EVENT", "MODEL", "VALUE"] },
+        "label": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "context": {
+      "type": "object",
+      "required": ["context_id", "label", "scope"],
+      "properties": {
+        "context_id": { "type": "string" },
+        "label": { "type": "string" },
+        "scope": { "enum": ["NAMESPACE", "TENANT", "GLOBAL", "REPO", "DOMAIN"] },
+        "parent_context_refs": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "temporalScope": {
+      "type": "object",
+      "required": ["time_model", "observed_at"],
+      "properties": {
+        "time_model": { "enum": ["INSTANT", "INTERVAL", "SNAPSHOT", "TIMELESS", "QUERY_WINDOW"] },
+        "valid_start": { "$ref": "#/$defs/timestamp" },
+        "valid_end": { "$ref": "#/$defs/timestamp" },
+        "observed_at": { "$ref": "#/$defs/timestamp" },
+        "transaction_time": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "policyScope": {
+      "type": "object",
+      "required": ["policy_scope_id", "classification", "export_eligible", "training_eligible"],
+      "properties": {
+        "policy_scope_id": { "type": "string" },
+        "classification": { "enum": ["PUBLIC", "INTERNAL", "CONFIDENTIAL", "PII", "RESTRICTED"] },
+        "consent_ref": { "type": "string" },
+        "export_eligible": { "type": "boolean" },
+        "training_eligible": { "type": "boolean" },
+        "policy_basis": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "anchor": {
+      "type": "object",
+      "required": ["anchor_id", "anchor_type", "artifact_ref", "selector"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_type": { "enum": ["TEXT_SPAN", "TABLE_CELL", "TABLE_COLUMN", "RDF_TRIPLE", "IMAGE_REGION", "VIDEO_INTERVAL", "AUDIO_INTERVAL", "CODE_RANGE", "LOG_EVENT", "FULL_RESOURCE"] },
+        "artifact_ref": { "type": "string" },
+        "selector": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["admissibility_tier", "review_status"],
+      "properties": {
+        "admissibility_tier": { "enum": ["RAW", "VALIDATED", "GOVERNED", "CANONICAL"] },
+        "review_status": { "enum": ["NOT_REQUIRED", "REQUIRED", "PENDING", "APPROVED", "REJECTED", "ESCALATED"] },
+        "policy_basis": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "noiseAssessment": {
+      "type": "object",
+      "required": ["noise_type", "confidence", "repair_action"],
+      "properties": {
+        "noise_type": { "enum": ["WRONG_ENTITY", "WRONG_RELATION", "WRONG_TYPE", "WRONG_SCOPE", "STALE_FACT", "MALFORMED_LITERAL", "UNIT_MISMATCH", "DUPLICATE_IDENTITY", "UNSUPPORTED_ASSERTION", "HALLUCINATED_ASSERTION", "PROVENANCE_CONFLICT", "POLICY_INVALID_FACT", "TEMPORAL_LEAKAGE", "LABEL_LEAKAGE"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "repair_action": { "enum": ["QUARANTINE", "MERGE", "SPLIT", "RETYPE", "RELINK", "RESCOPE", "DEPRECATE", "RETRACT", "REQUEST_EVIDENCE", "REQUEST_HUMAN_REVIEW", "REDACT", "PROMOTE"] },
+        "explanation": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

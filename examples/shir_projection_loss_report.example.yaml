@@ -1,0 +1,46 @@
+report_id: shir.loss.sourceos.topolvm.pyg.001
+kind: ProjectionLossReport
+projection_ref: shir.projection.sourceos.topolvm.pyg.001
+source_representation: SHIR
+target_representation: PYG_HETERODATA
+loss_items:
+  - semantic_dimension: N_ARY_RELATION
+    loss_mode: TRANSFORMED
+    source_ref: shir.assertion.sourceos.topolvm.provisions.pv.001
+    target_ref: pyg.edge_type.Technology.provisions.StorageResource
+    explanation: The three-role connector provisions(provider, resource, target_context) is split into binary edge-type triplets for PyG compatibility.
+    severity: MEDIUM
+  - semantic_dimension: TEMPORAL_SCOPE
+    loss_mode: ENCODED_INDIRECTLY
+    source_ref: shir.assertion.sourceos.topolvm.provisions.pv.001.temporal_scope
+    target_ref: pyg.node_feature.assertion.validity_snapshot
+    explanation: Snapshot time is exported as feature metadata rather than a first-class temporal graph object.
+    severity: LOW
+  - semantic_dimension: POLICY_SCOPE
+    loss_mode: REQUIRES_EXTERNAL_LOOKUP
+    source_ref: policy.scope.public.technical-docs
+    target_ref: pyg.dataset_manifest.policy_ref
+    explanation: Policy scope is preserved by reference in the dataset manifest and not encoded into model tensors.
+    severity: LOW
+semantic_leakage:
+  checked: true
+  risk_level: LOW
+  markers:
+    - NONE
+  mitigations:
+    - Do not use source filename, ontology class label, or future observation timestamp as model features.
+    - Keep policy and receipt references outside trainable tensors unless task explicitly requires governance prediction.
+governance:
+  review_status: REQUIRED
+  export_allowed: true
+  training_allowed: true
+  policy_basis:
+    - policy.public_technical_docs.allowed_for_training
+    - shir.v0.1.loss_report_required_for_graph_ml
+receipt_ref: shir.receipt.sourceos.topolvm.projection.001
+replay:
+  inputs_hash: sha256:sourceos-shir-projection-input-demo
+  config_hash: sha256:sourceos-shir-pyg-config-demo
+  replayable: true
+  created_at: '2026-05-04T15:48:00Z'
+notes: Projection is acceptable only because n-ary loss is explicit and recoverable through SHIR receipt references.
