@@ -1,0 +1,45 @@
+linkage_id: shir.linkage.kubernetes-node.agent-machine-node.001
+kind: LinkageCandidate
+linkage_type: SEMANTIC_OVERLAP
+candidate_status: REVIEW_REQUIRED
+left:
+  id: entity.kubernetes.node
+  label: KubernetesNode
+  endpoint_type: ENTITY
+  iri: https://socioprophet.github.io/ontogenesis/shir#KubernetesNode
+  source_ref: docs://sourceos/agent-machine-storage#p17
+right:
+  id: entity.agent_machine.node
+  label: AgentMachineNode
+  endpoint_type: ENTITY
+  iri: https://socioprophet.github.io/ontogenesis/shir#AgentMachineNode
+  source_ref: docs://sourceos/agent-machine-storage#agent-machine-profile
+evidence:
+  - evidence_type: LEXICAL
+    score: 0.64
+    detail: Both names denote node-level compute targets in orchestration documentation.
+    source_ref: docs://sourceos/agent-machine-storage
+  - evidence_type: STRUCTURAL
+    score: 0.72
+    detail: Both entities participate in storage provisioning relations with persistent volumes.
+    source_ref: graph://shir/sourceos-storage-demo
+  - evidence_type: HUMAN_CURATED
+    score: 0.5
+    detail: Requires curation because KubernetesNode is an upstream cluster primitive while AgentMachineNode is a SourceOS/AgentOS orchestration concept.
+    source_ref: issue://semantic-serdes/6
+confidence: 0.68
+curation:
+  review_status: REQUIRED
+  active_learning_priority: 0.83
+governance:
+  admissibility_tier: RAW
+  policy_basis:
+    - shir.v0.1.linkage_candidates_require_curation
+  export_eligible: true
+  training_eligible: false
+replay:
+  inputs_hash: sha256:sourceos-linkage-input-demo
+  config_hash: sha256:sourceos-linkage-config-demo
+  replayable: true
+  created_at: '2026-05-04T15:46:00Z'
+notes: Treat as semantic-overlap until curated; do not collapse identity between Kubernetes and AgentMachine node concepts.
