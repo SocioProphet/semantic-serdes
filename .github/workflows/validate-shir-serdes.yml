@@ -1,0 +1,40 @@
+name: validate-shir-serdes
+
+on:
+  pull_request:
+    paths:
+      - "schemas/shir_*.schema.json"
+      - "examples/shir_*.example.yaml"
+      - "docs/shir-serdes-v0.1.md"
+      - ".github/workflows/validate-shir-serdes.yml"
+      - "tools/validate_semantic_serdes.py"
+  push:
+    branches: [ main ]
+    paths:
+      - "schemas/shir_*.schema.json"
+      - "examples/shir_*.example.yaml"
+      - "docs/shir-serdes-v0.1.md"
+      - ".github/workflows/validate-shir-serdes.yml"
+      - "tools/validate_semantic_serdes.py"
+  workflow_dispatch:
+
+jobs:
+  validate-shir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema
+      - name: Validate SHIR schema/example pairs
+        run: |
+          python tools/validate_semantic_serdes.py --schema-dir schemas \
+            shir_candidate_assertion.schema.json:examples/shir_candidate_assertion.example.yaml \
+            shir_linkage_candidate.schema.json:examples/shir_linkage_candidate.example.yaml \
+            shir_assertion.schema.json:examples/shir_assertion.example.yaml \
+            shir_projection_loss_report.schema.json:examples/shir_projection_loss_report.example.yaml \
+            shir_receipt.schema.json:examples/shir_receipt.example.yaml
