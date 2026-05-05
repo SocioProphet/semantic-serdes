@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.dev/schemas/semantic-serdes/valueflows_shir_receipt.schema.json",
+  "title": "ValueFlowsSHIRReceipt",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "receipt"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": {"const": "shir.socioprophet.dev/v0.1"},
+    "kind": {"const": "SHIRReceipt"},
+    "metadata": {
+      "type": "object",
+      "required": ["name", "sourceLane", "projectionManifest"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "sourceLane": {"const": "bindings/valueflows_governed"},
+        "projectionManifest": {"type": "string", "pattern": "valueflows-to-shir\\.projection\\.v0\\.1\\.json$"}
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "required": ["id", "type", "sourceProjectionName", "sourceCheckpoint", "sourceMaterializedStateHash", "ontologyProfile", "targetProfile", "projectionStatus", "policyScopeRefs", "temporalScopeRefs", "projectionLossReport"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^shir-receipt:"},
+        "type": {"const": "shir:Receipt"},
+        "sourceProjectionName": {"const": "authoritative_projection_v2"},
+        "sourceCheckpoint": {"type": "string", "minLength": 1},
+        "sourceMaterializedStateHash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "ontologyProfile": {"type": "string", "minLength": 1},
+        "targetProfile": {"const": "SHIR v0.1"},
+        "projectionStatus": {"type": "string", "enum": ["lossless", "partial-preserving", "lossy"]},
+        "policyScopeRefs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "temporalScopeRefs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "projectionLossReport": {
+          "type": "object",
+          "required": ["id", "type", "preserved", "droppedOrDeferred", "requiresFollowup"],
+          "additionalProperties": false,
+          "properties": {
+            "id": {"type": "string", "pattern": "^shir-projection-loss:"},
+            "type": {"const": "shir:ProjectionLossReport"},
+            "preserved": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+            "droppedOrDeferred": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+            "requiresFollowup": {"const": true}
+          }
+        }
+      }
+    }
+  }
+}
