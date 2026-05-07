@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ViewContract",
+  "description": "Portable authority-bound view contract for governed graph, traversal, materialization, and agentic analysis surfaces.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "principal_authority",
+    "policy_authority",
+    "workspace_authority",
+    "semantic_authority",
+    "data_view",
+    "disclosure",
+    "transport",
+    "status"
+  ],
+  "properties": {
+    "apiVersion": { "const": "view.socioprophet.org/v0.1" },
+    "kind": { "const": "ViewContract" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "principal_authority": { "$ref": "#/$defs/principal_authority" },
+    "agent_authority": { "$ref": "#/$defs/agent_authority" },
+    "policy_authority": { "$ref": "#/$defs/policy_authority" },
+    "workspace_authority": { "$ref": "#/$defs/workspace_authority" },
+    "semantic_authority": { "$ref": "#/$defs/semantic_authority" },
+    "data_view": { "$ref": "#/$defs/data_view" },
+    "disclosure": { "$ref": "#/$defs/disclosure" },
+    "runtime_evidence": { "$ref": "#/$defs/runtime_evidence" },
+    "traversal_evidence": { "$ref": "#/$defs/traversal_evidence" },
+    "transport": { "$ref": "#/$defs/transport" },
+    "receipts": { "$ref": "#/$defs/receipts" },
+    "status": { "$ref": "#/$defs/status" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "principal_authority": {
+            "properties": { "principal_kind": { "const": "agent" } },
+            "required": ["principal_kind"]
+          }
+        }
+      },
+      "then": {
+        "required": ["agent_authority"],
+        "properties": {
+          "agent_authority": {
+            "required": [
+              "required",
+              "agent_registry_ref",
+              "agent_session_ref",
+              "revocation_status_ref",
+              "runtime_authority_ref"
+            ],
+            "properties": { "required": { "const": true } }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "disclosure": {
+            "properties": { "mode": { "const": "typed_absence" } },
+            "required": ["mode"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "disclosure": {
+            "required": ["typed_absence_policy"],
+            "properties": {
+              "typed_absence_policy": {
+                "required": ["enabled", "absence_term_ref", "allowed_absence_reasons"],
+                "properties": { "enabled": { "const": true } }
+              }
+            }
+          },
+          "semantic_authority": {
+            "required": ["ontogenesis_term_refs", "shacl_gate_ref"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "disclosure": {
+            "properties": {
+              "materialization_policy": {
+                "properties": { "max_materialize_bytes": { "exclusiveMinimum": 0 } },
+                "required": ["max_materialize_bytes"]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "policy_authority": {
+            "required": ["policy_bundle_ref", "policy_bundle_hash", "policy_decision_ref"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["runtime_evidence"],
+        "properties": {
+          "runtime_evidence": { "required": ["agentplane_work_order_ref"] }
+        }
+      },
+      "then": {
+        "properties": {
+          "runtime_evidence": {
+            "required": [
+              "agentplane_work_order_ref",
+              "agentplane_verdict_ref",
+              "run_artifact_ref",
+              "replay_artifact_ref"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["traversal_evidence"],
+        "properties": {
+          "traversal_evidence": { "required": ["cairnline_ref"] }
+        }
+      },
+      "then": {
+        "properties": {
+          "traversal_evidence": {
+            "required": ["cairnline_ref", "cairn_before_ref", "cairn_after_ref", "step_trace_ref"]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z][a-zA-Z0-9+.-]*://.+$|^[a-zA-Z]+:[A-Za-z0-9._~:/?#\\[\\]@!$&'()*+,;=%-]+$"
+    },
+    "ref_list": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["view_contract_id", "created_at", "schema_refs", "semantic_serdes_schema_id", "ontology_ref", "contract_hash"],
+      "properties": {
+        "view_contract_id": { "$ref": "#/$defs/ref" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "created_by": { "$ref": "#/$defs/ref" },
+        "schema_refs": { "$ref": "#/$defs/ref_list", "minItems": 1 },
+        "semantic_serdes_schema_id": { "const": "VIEW_CONTRACT_v0_1" },
+        "ontology_ref": { "$ref": "#/$defs/ref" },
+        "contract_hash": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "principal_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principal_kind", "principal_entity_ref"],
+      "properties": {
+        "principal_kind": { "enum": ["human", "agent", "service", "workload"] },
+        "principal_entity_ref": { "$ref": "#/$defs/ref" },
+        "identity_proof_ref": { "$ref": "#/$defs/ref" },
+        "platform_identity_ingress_ref": { "$ref": "#/$defs/ref" },
+        "identity_subject_context_ref": { "$ref": "#/$defs/ref" },
+        "identity_session_context_ref": { "$ref": "#/$defs/ref" },
+        "regis_entity_ref": { "$ref": "#/$defs/ref" },
+        "identity_assurance_level": { "enum": ["low", "medium", "high", "policy-defined"] }
+      }
+    },
+    "agent_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "agent_registry_ref": { "$ref": "#/$defs/ref" },
+        "agent_session_ref": { "$ref": "#/$defs/ref" },
+        "tool_grant_refs": { "$ref": "#/$defs/ref_list" },
+        "memory_grant_refs": { "$ref": "#/$defs/ref_list" },
+        "denied_scope_refs": { "$ref": "#/$defs/ref_list" },
+        "revocation_status_ref": { "$ref": "#/$defs/ref" },
+        "runtime_authority_ref": { "$ref": "#/$defs/ref" }
+      }
+    },
+    "policy_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["purpose", "policy_bundle_ref", "policy_bundle_hash", "policy_decision_ref", "revocation_epoch"],
+      "properties": {
+        "purpose": { "type": "string", "minLength": 1 },
+        "purpose_ref": { "$ref": "#/$defs/ref" },
+        "policy_bundle_ref": { "$ref": "#/$defs/ref" },
+        "policy_bundle_hash": { "$ref": "#/$defs/sha256" },
+        "compiled_plan_ref": { "$ref": "#/$defs/ref" },
+        "policy_decision_ref": { "$ref": "#/$defs/ref" },
+        "policy_verdict_ref": { "$ref": "#/$defs/ref" },
+        "obligation_refs": { "$ref": "#/$defs/ref_list" },
+        "validation_report_ref": { "$ref": "#/$defs/ref" },
+        "release_pack_ref": { "$ref": "#/$defs/ref" },
+        "replay_report_ref": { "$ref": "#/$defs/ref" },
+        "revocation_epoch": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "workspace_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workspace_fingerprint_ref", "environment_fingerprint_ref"],
+      "properties": {
+        "sociosphere_workspace_ref": { "$ref": "#/$defs/ref" },
+        "workspace_fingerprint_ref": { "$ref": "#/$defs/ref" },
+        "environment_fingerprint_ref": { "$ref": "#/$defs/ref" },
+        "release_set_fingerprint_ref": { "$ref": "#/$defs/ref" },
+        "artifact_set_fingerprint_ref": { "$ref": "#/$defs/ref" },
+        "policy_fingerprint_ref": { "$ref": "#/$defs/ref" },
+        "tenant_scope_ref": { "$ref": "#/$defs/ref" },
+        "rollback_fingerprint_ref": { "$ref": "#/$defs/ref" },
+        "topology_ref": { "$ref": "#/$defs/ref" }
+      }
+    },
+    "semantic_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantic_serdes_profile_ref", "ontogenesis_term_refs", "jsonld_context_ref", "shacl_gate_ref"],
+      "properties": {
+        "semantic_serdes_profile_ref": { "$ref": "#/$defs/ref" },
+        "ontogenesis_term_refs": { "$ref": "#/$defs/ref_list", "minItems": 1 },
+        "jsonld_context_ref": { "$ref": "#/$defs/ref" },
+        "shacl_gate_ref": { "$ref": "#/$defs/ref" },
+        "standards_refs": { "$ref": "#/$defs/ref_list" }
+      }
+    },
+    "data_view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_graph_ref", "view_signature_inputs", "view_signature_hash"],
+      "properties": {
+        "source_graph_ref": { "$ref": "#/$defs/ref" },
+        "mesh_view_ref": { "$ref": "#/$defs/ref" },
+        "view_signature_inputs": {
+          "type": "array",
+          "items": { "enum": ["principal_authority", "agent_authority", "policy_authority", "workspace_authority", "semantic_authority", "source_graph_ref", "runtime_evidence", "traversal_evidence"] },
+          "minItems": 3,
+          "uniqueItems": true
+        },
+        "view_signature_hash": { "$ref": "#/$defs/sha256" },
+        "allowed_predicate_refs": { "$ref": "#/$defs/ref_list" },
+        "denied_predicate_refs": { "$ref": "#/$defs/ref_list" },
+        "allowed_entity_class_refs": { "$ref": "#/$defs/ref_list" },
+        "denied_entity_class_refs": { "$ref": "#/$defs/ref_list" }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "materialization_policy"],
+      "properties": {
+        "mode": { "enum": ["full", "redacted", "typed_absence", "aggregate", "metadata_only", "deny"] },
+        "typed_absence_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "absence_term_ref": { "$ref": "#/$defs/ref" },
+            "allowed_absence_reasons": {
+              "type": "array",
+              "items": { "enum": ["not_authorized", "not_materialized", "redacted_by_policy", "revoked", "unknown"] },
+              "uniqueItems": true
+            }
+          }
+        },
+        "redaction_boundary_ref": { "$ref": "#/$defs/ref" },
+        "materialization_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_materialize_bytes", "allowed_fields", "denied_fields", "materialization_requires_policy_decision"],
+          "properties": {
+            "max_materialize_bytes": { "type": "integer", "minimum": 0 },
+            "allowed_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+            "denied_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+            "materialization_requires_policy_decision": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "runtime_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "agentplane_work_order_ref": { "$ref": "#/$defs/ref" },
+        "agentplane_verdict_ref": { "$ref": "#/$defs/ref" },
+        "policy_verdict_envelope_ref": { "$ref": "#/$defs/ref" },
+        "placement_decision_ref": { "$ref": "#/$defs/ref" },
+        "run_artifact_ref": { "$ref": "#/$defs/ref" },
+        "replay_artifact_ref": { "$ref": "#/$defs/ref" },
+        "session_artifact_ref": { "$ref": "#/$defs/ref" }
+      }
+    },
+    "traversal_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cairnline_ref": { "$ref": "#/$defs/ref" },
+        "cairn_before_ref": { "$ref": "#/$defs/ref" },
+        "cairn_after_ref": { "$ref": "#/$defs/ref" },
+        "step_trace_ref": { "$ref": "#/$defs/ref" },
+        "materialization_trace_ref": { "$ref": "#/$defs/ref" },
+        "cut_certificate_ref": { "$ref": "#/$defs/ref" }
+      }
+    },
+    "transport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_context_id", "aad_binding_hash"],
+      "properties": {
+        "tritrpc_envelope_ref": { "$ref": "#/$defs/ref" },
+        "schema_context_id": { "const": "VIEW_CONTRACT_v0_1" },
+        "aad_binding_hash": { "$ref": "#/$defs/sha256" },
+        "transport_auth_ref": { "$ref": "#/$defs/ref" }
+      }
+    },
+    "receipts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evidence_receipt_refs": { "$ref": "#/$defs/ref_list" },
+        "recipient_receipt_refs": { "$ref": "#/$defs/ref_list" },
+        "materialization_receipt_refs": { "$ref": "#/$defs/ref_list" },
+        "revocation_receipt_refs": { "$ref": "#/$defs/ref_list" }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "valid_from"],
+      "properties": {
+        "state": { "enum": ["draft", "active", "superseded", "revoked", "expired"] },
+        "valid_from": { "type": "string", "format": "date-time" },
+        "valid_until": { "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
+        "supersedes": { "anyOf": [{ "$ref": "#/$defs/ref" }, { "type": "null" }] },
+        "revoked_by": { "anyOf": [{ "$ref": "#/$defs/ref" }, { "type": "null" }] }
+      }
+    }
+  }
+}
