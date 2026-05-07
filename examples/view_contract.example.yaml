@@ -1,0 +1,138 @@
+apiVersion: view.socioprophet.org/v0.1
+kind: ViewContract
+metadata:
+  view_contract_id: view:sha256:1111111111111111111111111111111111111111111111111111111111111111
+  created_at: "2026-05-07T00:00:00Z"
+  created_by: entity:human:mh
+  schema_refs:
+    - semantic-serdes://schemas/view-contract/v0.1
+  semantic_serdes_schema_id: VIEW_CONTRACT_v0_1
+  ontology_ref: ontogenesis://module/view-governance@0.1.0
+  contract_hash: sha256:2222222222222222222222222222222222222222222222222222222222222222
+principal_authority:
+  principal_kind: agent
+  principal_entity_ref: entity:agent:reviewer-01
+  identity_proof_ref: identity-is-prime://proof/reviewer-01
+  platform_identity_ingress_ref: prophet-platform://identity/ingress/reviewer-01
+  identity_session_context_ref: prophet-platform://identity/session/sess-01
+  regis_entity_ref: regis://entity/reviewer-01
+  identity_assurance_level: policy-defined
+agent_authority:
+  required: true
+  agent_registry_ref: agent-registry://agent/reviewer-01
+  agent_session_ref: agent-registry://session/sess-01
+  tool_grant_refs:
+    - agent-registry://tool-grant/read-graph-view
+  memory_grant_refs: []
+  denied_scope_refs:
+    - agent-registry://denied-scope/raw-pii
+  revocation_status_ref: agent-registry://revocation-status/epoch-7
+  runtime_authority_ref: agent-registry://runtime-authority/reviewer-01
+policy_authority:
+  purpose: review
+  purpose_ref: policy-fabric://purpose/review
+  policy_bundle_ref: policy-fabric://bundle/review-metadata-only@0.1.0
+  policy_bundle_hash: sha256:3333333333333333333333333333333333333333333333333333333333333333
+  compiled_plan_ref: policy-fabric://compiled-plan/review-metadata-only@0.1.0
+  policy_decision_ref: policy-fabric://decision/allow-metadata-deny-materialize
+  obligation_refs:
+    - policy-fabric://obligation/no-raw-content-publication
+  validation_report_ref: policy-fabric://validation-report/review-metadata-only
+  replay_report_ref: policy-fabric://replay-report/review-metadata-only
+  revocation_epoch: 7
+workspace_authority:
+  sociosphere_workspace_ref: sociosphere://workspace/socioprophet
+  workspace_fingerprint_ref: sociosphere://fingerprint/workspace/wf-01
+  environment_fingerprint_ref: sociosphere://fingerprint/environment/env-01
+  release_set_fingerprint_ref: sociosphere://fingerprint/release-set/rs-01
+  artifact_set_fingerprint_ref: sociosphere://fingerprint/artifact-set/as-01
+  policy_fingerprint_ref: sociosphere://fingerprint/policy/pf-01
+  tenant_scope_ref: sociosphere://tenant/default
+  rollback_fingerprint_ref: sociosphere://fingerprint/rollback/rb-01
+  topology_ref: sociosphere://topology/default
+semantic_authority:
+  semantic_serdes_profile_ref: semantic-serdes://profile/view-contract/v0.1
+  ontogenesis_term_refs:
+    - ontogenesis://term/ViewContract
+    - ontogenesis://term/DisclosureMode
+    - ontogenesis://term/TypedAbsence
+    - ontogenesis://term/PolicyBarrier
+    - ontogenesis://term/RedactionBoundary
+  jsonld_context_ref: ontogenesis://jsonld/view-governance/context.jsonld
+  shacl_gate_ref: ontogenesis://shapes/view-contract.shacl
+  standards_refs:
+    - socioprophet-standards-knowledge://knowledge/view-contract
+    - socioprophet-standards-storage://storage/view-contract
+    - socioprophet-agent-standards://agent/view-contract
+data_view:
+  source_graph_ref: regis://graph/snapshot/demo-01
+  mesh_view_ref: meshrush://view/demo-01
+  view_signature_inputs:
+    - principal_authority
+    - agent_authority
+    - policy_authority
+    - workspace_authority
+    - semantic_authority
+    - source_graph_ref
+  view_signature_hash: sha256:4444444444444444444444444444444444444444444444444444444444444444
+  allowed_predicate_refs:
+    - pred:demo:can_read_metadata
+  denied_predicate_refs:
+    - pred:demo:raw_pii
+  allowed_entity_class_refs:
+    - ontogenesis://class/MetadataRecord
+  denied_entity_class_refs:
+    - ontogenesis://class/RawPII
+disclosure:
+  mode: typed_absence
+  typed_absence_policy:
+    enabled: true
+    absence_term_ref: ontogenesis://term/TypedAbsence
+    allowed_absence_reasons:
+      - not_authorized
+      - not_materialized
+      - redacted_by_policy
+  redaction_boundary_ref: ontogenesis://term/RedactionBoundary
+  materialization_policy:
+    max_materialize_bytes: 0
+    allowed_fields: []
+    denied_fields:
+      - raw_text
+      - email
+      - phone
+      - ssn
+    materialization_requires_policy_decision: true
+runtime_evidence:
+  agentplane_work_order_ref: agentplane://work-order/demo-review-01
+  agentplane_verdict_ref: agentplane://verdict/admitted-metadata-only
+  policy_verdict_envelope_ref: agentplane://policy-fabric-verdict/demo-01
+  placement_decision_ref: agentplane://placement/demo-01
+  run_artifact_ref: agentplane://run/demo-01
+  replay_artifact_ref: agentplane://replay/demo-01
+traversal_evidence:
+  cairnline_ref: cairnpath://cairnline/demo-01
+  cairn_before_ref: cairnpath://cairn/before-01
+  cairn_after_ref: cairnpath://cairn/after-01
+  step_trace_ref: cairnpath://step-trace/demo-01
+  materialization_trace_ref: cairnpath://materialization-trace/denied-01
+  cut_certificate_ref: cairnpath://cut-certificate/demo-01
+transport:
+  tritrpc_envelope_ref: tritrpc://envelope/demo-01
+  schema_context_id: VIEW_CONTRACT_v0_1
+  aad_binding_hash: sha256:5555555555555555555555555555555555555555555555555555555555555555
+  transport_auth_ref: tritrpc://auth/demo-01
+receipts:
+  evidence_receipt_refs:
+    - receipt://evidence/demo-01
+  recipient_receipt_refs:
+    - receipt://recipient/demo-01
+  materialization_receipt_refs:
+    - receipt://materialization/denied-01
+  revocation_receipt_refs:
+    - receipt://revocation/epoch-7
+status:
+  state: active
+  valid_from: "2026-05-07T00:00:00Z"
+  valid_until: null
+  supersedes: null
+  revoked_by: null
