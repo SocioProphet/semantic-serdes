@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.dev/schemas/semantic-serdes/valueflows_to_shir_projection_manifest.schema.json",
+  "title": "ValueFlowsToSHIRProjectionManifest",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "sourceProfile", "targetProfile", "mappings", "connectors", "lossProfile"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": {"const": "ontogenesis.socioprophet.dev/v0.1"},
+    "kind": {"const": "ValueFlowsToSHIRProjectionManifest"},
+    "metadata": {
+      "type": "object",
+      "required": ["name", "sourceLane", "targetSpec", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "sourceLane": {"type": "string", "const": "bindings/valueflows_governed"},
+        "targetSpec": {"type": "string", "pattern": "shir-v0\\.1\\.md$"},
+        "status": {"type": "string", "enum": ["draft", "active", "deprecated"]}
+      }
+    },
+    "sourceProfile": {
+      "type": "object",
+      "required": ["name", "projectionName", "objects", "runtimeProofs"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"const": "valueflows-governed"},
+        "projectionName": {"const": "authoritative_projection_v2"},
+        "objects": {"type": "array", "minItems": 6, "items": {"type": "string"}},
+        "runtimeProofs": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    },
+    "targetProfile": {
+      "type": "object",
+      "required": ["name", "version", "objects"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"const": "SHIR"},
+        "version": {"const": "v0.1"},
+        "objects": {"type": "array", "minItems": 8, "items": {"type": "string"}}
+      }
+    },
+    "mappings": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["source", "targets", "rule"],
+        "additionalProperties": false,
+        "properties": {
+          "source": {"type": "string", "minLength": 1},
+          "targets": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^shir:"}},
+          "rule": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "connectors": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "roles"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^vfg:"},
+          "roles": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        }
+      }
+    },
+    "lossProfile": {
+      "type": "object",
+      "required": ["preserved", "notFullyPreserved", "requiresProjectionLossReport"],
+      "additionalProperties": false,
+      "properties": {
+        "preserved": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "notFullyPreserved": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "requiresProjectionLossReport": {"const": true}
+      }
+    }
+  }
+}
