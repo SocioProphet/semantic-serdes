@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.dev/schemas/semantic-serdes/beacon_pattern_instance.schema.json",
+  "title": "BeaconPatternInstance",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "event_refs", "pattern", "candidate_explanations", "governance"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": {"const": "security-rpm.socioprophet.dev/v0.1"},
+    "kind": {"const": "BeaconPatternInstance"},
+    "metadata": {
+      "type": "object",
+      "required": ["id", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^beacon:"},
+        "status": {"type": "string", "enum": ["candidate", "validated", "rejected", "suppressed"]},
+        "name": {"type": "string"}
+      }
+    },
+    "event_refs": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+    "pattern": {
+      "type": "object",
+      "required": ["pattern_type", "periodicity", "stable_bindings", "target_behavior"],
+      "additionalProperties": false,
+      "properties": {
+        "pattern_type": {
+          "type": "string",
+          "enum": ["benign_status_heartbeat", "software_update_checkin", "browser_background_sync", "suspicious_c2_candidate", "unknown_repeated_signal"]
+        },
+        "periodicity": {
+          "type": "object",
+          "required": ["interval_seconds", "jitter_seconds", "confidence"],
+          "additionalProperties": false,
+          "properties": {
+            "interval_seconds": {"type": "number", "minimum": 0},
+            "jitter_seconds": {"type": "number", "minimum": 0},
+            "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "stable_bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role", "value_ref"],
+            "additionalProperties": false,
+            "properties": {
+              "role": {"type": "string"},
+              "value_ref": {"type": "string"},
+              "field_path": {"type": "string"}
+            }
+          }
+        },
+        "target_behavior": {"type": "string", "enum": ["stable", "rotating", "fan_out", "unknown"]},
+        "payload_size_class": {"type": "string", "enum": ["small_repeated", "medium", "large", "variable", "unknown"]},
+        "control_purpose": {"type": "string", "enum": ["heartbeat", "update", "analytics", "command_and_control", "unknown"]}
+      }
+    },
+    "candidate_explanations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["explanation", "score"],
+        "additionalProperties": false,
+        "properties": {
+          "explanation": {"type": "string"},
+          "score": {"type": "number", "minimum": 0, "maximum": 1},
+          "security_result_category": {"type": "string"}
+        }
+      }
+    },
+    "selected_explanation": {"type": "string"},
+    "governance": {
+      "type": "object",
+      "required": ["preimage_receipt_refs", "linkability_scope", "raw_payload_export"],
+      "additionalProperties": false,
+      "properties": {
+        "preimage_receipt_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "linkability_scope": {"type": "string", "enum": ["event_only", "session", "project_lab_only", "tenant_security_boundary", "global_forbidden"]},
+        "raw_payload_export": {"type": "string", "enum": ["forbidden", "redacted", "local_ephemeral", "allowed_by_signed_scope"]},
+        "high_entropy_fields": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}
