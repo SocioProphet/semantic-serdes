@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "smart-etl-plan-v0.1.schema.json",
+  "title": "SmartETLPlan v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["plan_id", "schema_version", "intent", "semantic_graph", "logical_derivation", "asset_graph", "execution_graph", "placement_graph", "policy_graph", "evidence_graph", "status", "created_at"],
+  "properties": {
+    "plan_id": {"type": "string", "pattern": "^smart_etl_plan_[A-Za-z0-9_-]+$"},
+    "schema_version": {"const": "smart-etl-plan/v0.1"},
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_ref", "workroom_ref", "operation", "target_dataset_ref", "refresh_rate"],
+      "properties": {
+        "actor_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"},
+        "agent_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"},
+        "workroom_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"},
+        "operation": {"$ref": "common-v0.1.schema.json#/$defs/Operation"},
+        "target_dataset_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"},
+        "target_materialization_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"},
+        "refresh_rate": {"$ref": "common-v0.1.schema.json#/$defs/RefreshRate"},
+        "natural_language_request": {"type": "string"},
+        "source_request_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}
+      }
+    },
+    "semantic_graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_meanings", "ontology_bindings", "semantic_discovery_refs"],
+      "properties": {
+        "dataset_meanings": {"type": "array", "items": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}},
+        "business_concepts": {"type": "array", "items": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}},
+        "ontology_bindings": {"type": "array", "items": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}},
+        "aliases": {"type": "array", "items": {"type": "string"}},
+        "semantic_discovery_refs": {"type": "array", "items": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}}
+      }
+    },
+    "logical_derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["derivation_id", "derivation_kind", "source_dataset_refs", "target_dataset_ref", "target_columns", "column_lineage", "parse_receipt_ref", "status"],
+      "properties": {
+        "derivation_id": {"type": "string", "pattern": "^derivation_[A-Za-z0-9_-]+$"},
+        "derivation_kind": {"type": "string", "enum": ["sql_select", "sql_ctas", "beam_pipeline", "notebook", "agent_generated", "metadata_only", "manual_registration"]},
+        "sql": {"type": "string"},
+        "sql_dialect": {"type": "string", "enum": ["ansi", "postgres", "trino", "spark", "duckdb", "bigquery", "snowflake", "sqlite", "unknown"]},
+        "source_dataset_refs": {"type": "array", "items": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}, "minItems": 1},
+        "target_dataset_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"},
+        "referenced_columns": {"type": "array", "items": {"type": "object", "required": ["dataset_ref", "column_name"], "properties": {"dataset_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}, "column_name": {"type": "string"}, "classification": {"$ref": "common-v0.1.schema.json#/$defs/Classification"}}}},
+        "target_columns": {"type": "array", "items": {"type": "string"}},
+        "column_lineage": {"type": "array", "items": {"type": "object", "required": ["target_column", "source_columns", "lineage_kind"], "properties": {"target_column": {"type": "string"}, "source_columns": {"type": "array", "items": {"type": "object", "required": ["source_dataset_ref", "source_column"], "properties": {"source_dataset_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}, "source_column": {"type": "string"}}}}, "lineage_kind": {"type": "string", "enum": ["direct_projection", "renamed_projection", "derived_expression", "aggregate", "join_key", "filter_only", "masked", "unknown"]}, "expression": {"type": "string"}, "confidence": {"type": "number", "minimum": 0, "maximum": 1}}}},
+        "unsafe_constructs": {"type": "array", "items": {"type": "string", "enum": ["select_star", "dynamic_sql", "unbounded_cross_join", "unknown_function", "unsupported_udf", "unqualified_column", "ambiguous_column", "target_overwrite", "non_deterministic_function"]}},
+        "parse_warnings": {"type": "array", "items": {"type": "string"}},
+        "parse_receipt_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"},
+        "status": {"type": "string", "enum": ["parsed", "parse_failed", "validated", "requires_rewrite", "policy_blocked", "ready_for_planning"]}
+      }
+    },
+    "asset_graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_refs", "materialization_refs", "dataset_dependencies", "refresh_policies"],
+      "properties": {
+        "dataset_refs": {"type": "array", "items": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}, "minItems": 1},
+        "materialization_refs": {"type": "array", "items": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}},
+        "dataset_dependencies": {"type": "array", "items": {"type": "object", "required": ["from_dataset_ref", "to_dataset_ref", "dependency_kind"], "properties": {"from_dataset_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}, "to_dataset_ref": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}, "dependency_kind": {"type": "string", "enum": ["reads_from", "derives_from", "joins_with", "aggregates_from", "filters_from"]}}}},
+        "refresh_policies": {"type": "array", "items": {"$ref": "common-v0.1.schema.json#/$defs/Ref"}}
+      }
+    },
+    "execution_graph": {"type": "object"},
+    "placement_graph": {"type": "object"},
+    "policy_graph": {"type": "object"},
+    "evidence_graph": {"type": "object"},
+    "failed_branches": {"type": "array", "items": {"type": "object"}},
+    "status": {"$ref": "common-v0.1.schema.json#/$defs/PlanStatus"},
+    "created_at": {"$ref": "common-v0.1.schema.json#/$defs/Timestamp"},
+    "updated_at": {"$ref": "common-v0.1.schema.json#/$defs/Timestamp"}
+  }
+}
