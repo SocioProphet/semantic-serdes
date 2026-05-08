@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common-v0.1.schema.json",
+  "title": "Smart ETL Common v0.1",
+  "$defs": {
+    "Ref": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9._:/#@-]+$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "Operation": {
+      "type": "string",
+      "enum": ["discover", "validate", "derive", "materialize", "refresh", "share", "export", "inspect_lineage", "explain_failure", "remediate"]
+    },
+    "Permission": {
+      "type": "string",
+      "enum": ["read", "derive", "materialize", "share", "export", "administer", "deprecate", "delete"]
+    },
+    "Classification": {
+      "type": "string",
+      "enum": ["public", "internal", "confidential", "restricted", "regulated", "secret"]
+    },
+    "RefreshRate": {
+      "type": "string",
+      "enum": ["none", "manual", "hourly", "daily", "weekly", "monthly", "quarterly", "annually", "event_driven", "streaming"]
+    },
+    "PlanStatus": {
+      "type": "string",
+      "enum": ["draft", "planned", "validated", "policy_blocked", "placement_blocked", "ready_for_submission", "submitted", "running", "succeeded", "failed", "abandoned", "superseded"]
+    },
+    "EvidenceStatus": {
+      "type": "string",
+      "enum": ["not_emitted", "planned", "emitted", "verified", "rejected", "partial"]
+    },
+    "ExecutionEngine": {
+      "type": "string",
+      "enum": ["duckdb.local", "trino.ctas", "beam.direct", "beam.flink", "beam.spark", "spark.sql", "flink.sql", "ray.task", "dagster.asset", "airflow.dag", "argo.workflow", "agentplane.run", "metadata_only"]
+    }
+  }
+}
