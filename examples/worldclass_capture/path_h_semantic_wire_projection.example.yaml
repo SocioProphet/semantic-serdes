@@ -1,0 +1,62 @@
+projection_id: wire-projection-path-h-permission-claim-001
+epoch_id: epoch:path-h-semantic-wire:2026-05-12T00:00:00Z
+codebook_version: sem243-control-path-h-v0.1.0
+cycle_version: "2026-05-12"
+source_cells:
+  - cell:shir-permission-claim-001
+  - cell:policy-basis-001
+schema_refs:
+  - schema:wire_semantic_projection.schema.json
+  - schema:semantic_control_codebook.schema.json
+  - schema:shir_assertion.schema.json
+temporal_refs:
+  - temporal:ttl-window-5000ms
+grounding_refs:
+  - grounding:policy-registry-v0.1
+environment_refs:
+  - env:path-h-sim-epoch-001
+hot_coordinate:
+  phase_code: PHASE_PATH_H_CONTROL
+  topic_code: TOPIC_PERMISSION_CLAIM
+  phase_index: 2
+  topic_index: 1
+  state243_ref: state243:allow-mid-deny:v0.1
+  sem243_ref: sem243:policy.permission.claim
+handle_bindings:
+  route_h: handle:route-path-h-permission-claim-v1
+  context_h: handle:context-actor-action-resource-condition
+  schema_h: handle:schema-shir-assertion-v0.1
+  bundle_h: handle:bundle-permission-claim-001
+  environment_h: handle:env-path-h-sim-epoch-001
+placement_policy:
+  default_cadence: MICROBEAT
+  hot_frame_allowed: true
+  stream_inheritable: true
+  beacon_allowed: true
+  inline_override_allowed: false
+  sensitive_off_hot_path: true
+  repair_mode: DELTA_FIRST
+resolver:
+  alias_group_ids:
+    - alias-group:path-h-semantic-control-v0.1
+  transition_refs:
+    - transition:sem243-control-path-h-v0.1-to-v0.2
+  replay_required: true
+  epoch_rollover_policy: STRICT
+provenance:
+  source_refs:
+    - doc:path_h_semantic_wire_alignment.md
+    - codebook:sem243-control-path-h-v0.1
+  hashes:
+    - sha256:wire-projection-path-h-permission-claim-001
+governance:
+  admissibility_tier: GOVERNED
+  policy_refs:
+    - policy:semantic-wire-hot-path-v0.1
+    - policy:path-h-no-state-on-classical-wire
+  review_required: true
+notes: >
+  Path-H semantic projection for a governed permission claim. Full claim
+  semantics remain in SHIR/SemanticCell off the hot path; the hot frame carries
+  only sem243/state243 handles, route handles, replay coordinates, and control
+  evidence.
