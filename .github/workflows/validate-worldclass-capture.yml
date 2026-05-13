@@ -43,4 +43,7 @@ jobs:
             symbol_cell.schema.json:examples/worldclass_capture/symbol_cell.example.yaml \
             recovery_claim.schema.json:examples/worldclass_capture/recovery_claim.example.yaml \
             surface_family_bundle.schema.json:examples/worldclass_capture/surface_family_bundle.example.yaml \
-            route_projection_bundle.schema.json:examples/worldclass_capture/route_projection_bundle.example.yaml
+            route_projection_bundle.schema.json:examples/worldclass_capture/route_projection_bundle.example.yaml \
+            semantic_control_codebook.schema.json:examples/worldclass_capture/semantic_control_codebook.example.yaml \
+            wire_semantic_projection.schema.json:examples/worldclass_capture/path_h_semantic_wire_projection.example.yaml \
+            route_projection_bundle.schema.json:examples/worldclass_capture/path_h_route_projection_bundle.example.yaml
