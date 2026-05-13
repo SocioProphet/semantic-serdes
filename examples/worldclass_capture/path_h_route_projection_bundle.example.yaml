@@ -1,0 +1,24 @@
+route_id: route:path-h/semantic/permission-claim/v1
+route_pattern: /path-h/semantic/permission-claim/:projection_id
+family_ref: family:path-h-semantic-wire
+projection_refs:
+  - wire-projection-path-h-permission-claim-001
+semantic_refs:
+  - cell:shir-permission-claim-001
+  - codebook:sem243-control-path-h-v0.1
+  - state243:allow-mid-deny:v0.1
+surface_kind: CONTROL
+default_bundle_ref: handle:bundle-permission-claim-001
+provenance:
+  source_refs:
+    - doc:path_h_semantic_wire_alignment.md
+    - projection:wire-projection-path-h-permission-claim-001
+  hashes:
+    - sha256:route-path-h-permission-claim-v1
+governance:
+  admissibility_tier: GOVERNED
+  review_required: true
+notes: >
+  Route projection binding the Path-H hot route to the semantic projection and
+  semantic control codebook. The route carries handles and control coordinates,
+  not the full permission-claim payload.
