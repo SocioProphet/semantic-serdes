@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.example/schemas/semantic_control_codebook.schema.json",
+  "title": "SemanticControlCodebook",
+  "type": "object",
+  "required": [
+    "codebook_id",
+    "codebook_version",
+    "epoch_id",
+    "alphabet_kind",
+    "semantic_planes",
+    "symbol_set",
+    "handle_policy",
+    "resolver",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "codebook_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "codebook_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "epoch_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "alphabet_kind": {
+      "enum": [
+        "SEM243",
+        "STATE243",
+        "CTRL243",
+        "PATH_H_BINDING"
+      ]
+    },
+    "semantic_planes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "RAW",
+          "EVENT",
+          "ENTITY",
+          "DERIVED",
+          "GLOBAL",
+          "SURFACE",
+          "CONTROL"
+        ]
+      },
+      "minItems": 1
+    },
+    "symbol_set": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/symbol"
+      },
+      "minItems": 1
+    },
+    "handle_policy": {
+      "type": "object",
+      "required": [
+        "off_hot_path_default",
+        "sensitive_off_hot_path",
+        "route_binding_required",
+        "projection_loss_required_when_lossy"
+      ],
+      "properties": {
+        "off_hot_path_default": {
+          "type": "boolean"
+        },
+        "sensitive_off_hot_path": {
+          "type": "boolean"
+        },
+        "route_binding_required": {
+          "type": "boolean"
+        },
+        "projection_loss_required_when_lossy": {
+          "type": "boolean"
+        },
+        "allowed_handle_bindings": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "route_h",
+              "context_h",
+              "schema_h",
+              "bundle_h",
+              "environment_h",
+              "basis_id",
+              "sem243_ref",
+              "state243_ref"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "resolver": {
+      "type": "object",
+      "required": [
+        "alias_group_ids",
+        "transition_refs",
+        "replay_required"
+      ],
+      "properties": {
+        "alias_group_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "transition_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replay_required": {
+          "type": "boolean"
+        },
+        "epoch_rollover_policy": {
+          "enum": [
+            "STRICT",
+            "GRACE",
+            "FORCE_REFRESH"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_refs",
+        "hashes"
+      ],
+      "properties": {
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "admissibility_tier",
+        "review_required"
+      ],
+      "properties": {
+        "admissibility_tier": {
+          "enum": [
+            "RAW",
+            "VALIDATED",
+            "GOVERNED",
+            "CANONICAL",
+            "CONTESTED"
+          ]
+        },
+        "review_required": {
+          "type": "boolean"
+        },
+        "policy_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "symbol": {
+      "type": "object",
+      "required": [
+        "symbol_id",
+        "symbol_code",
+        "trit_vector",
+        "semantic_role",
+        "projection_mode"
+      ],
+      "properties": {
+        "symbol_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "symbol_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trit_vector": {
+          "type": "array",
+          "items": {
+            "enum": [
+              0,
+              1,
+              2
+            ]
+          },
+          "minItems": 1
+        },
+        "semantic_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonical_label": {
+          "type": "string"
+        },
+        "semantic_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "state243_ref": {
+          "type": "string"
+        },
+        "ctrl243_constraints": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            },
+            "lane": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            "fallback": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            "routefmt": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "truth_class_policy": {
+          "type": "object",
+          "properties": {
+            "allowed_truth_classes": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "OBSERVED",
+                  "ASSERTED",
+                  "INFERRED",
+                  "REPUTED"
+                ]
+              }
+            },
+            "preserve_truth_class": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "projection_mode": {
+          "enum": [
+            "LOSSLESS",
+            "LOSSY",
+            "OPAQUE_HANDLE_ONLY"
+          ]
+        },
+        "loss_report_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

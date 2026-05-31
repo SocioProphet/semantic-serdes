@@ -1,0 +1,91 @@
+codebook_id: codebook:sem243-control-path-h-v0.1
+codebook_version: "0.1.0"
+epoch_id: epoch:path-h-semantic-wire:2026-05-12T00:00:00Z
+alphabet_kind: SEM243
+semantic_planes:
+  - ENTITY
+  - DERIVED
+  - CONTROL
+symbol_set:
+  - symbol_id: sem243:policy.permission.claim
+    symbol_code: PPC
+    trit_vector: [2, 1, 0, 2, 1]
+    semantic_role: permission_claim
+    canonical_label: PermissionClaim(actor, action, resource, condition)
+    semantic_refs:
+      - schema:shir_assertion.schema.json
+      - cell:shir-permission-claim-001
+    state243_ref: state243:allow-mid-deny:v0.1
+    ctrl243_constraints:
+      profile: 2
+      lane: [2]
+      evidence: [0, 1, 2]
+      fallback: [0, 1, 2]
+      routefmt: [1, 2]
+    truth_class_policy:
+      allowed_truth_classes:
+        - OBSERVED
+        - ASSERTED
+        - INFERRED
+      preserve_truth_class: true
+    projection_mode: OPAQUE_HANDLE_ONLY
+    loss_report_required: false
+  - symbol_id: sem243:policy.negated.permission.claim
+    symbol_code: NPC
+    trit_vector: [2, 1, 2, 0, 1]
+    semantic_role: negated_permission_claim
+    canonical_label: Not(PermissionClaim(actor, action, resource, condition))
+    semantic_refs:
+      - schema:shir_assertion.schema.json
+      - cell:shir-negated-permission-claim-001
+    state243_ref: state243:allow-mid-deny:v0.1
+    ctrl243_constraints:
+      profile: 2
+      lane: [2]
+      evidence: [0, 1, 2]
+      fallback: [1, 2]
+      routefmt: [1, 2]
+    truth_class_policy:
+      allowed_truth_classes:
+        - ASSERTED
+        - INFERRED
+        - REPUTED
+      preserve_truth_class: true
+    projection_mode: LOSSY
+    loss_report_required: true
+handle_policy:
+  off_hot_path_default: true
+  sensitive_off_hot_path: true
+  route_binding_required: true
+  projection_loss_required_when_lossy: true
+  allowed_handle_bindings:
+    - route_h
+    - context_h
+    - schema_h
+    - bundle_h
+    - environment_h
+    - basis_id
+    - sem243_ref
+    - state243_ref
+resolver:
+  alias_group_ids:
+    - alias-group:path-h-semantic-control-v0.1
+  transition_refs:
+    - transition:sem243-control-path-h-v0.1-to-v0.2
+  replay_required: true
+  epoch_rollover_policy: STRICT
+provenance:
+  source_refs:
+    - doc:path_h_semantic_wire_alignment.md
+    - spec:TriTRPC:annex-b-path-h
+  hashes:
+    - sha256:sem243-control-path-h-v0.1
+governance:
+  admissibility_tier: GOVERNED
+  review_required: true
+  policy_refs:
+    - policy:semantic-wire-hot-path-v0.1
+notes: >
+  Example SEM243 codebook for Path-H semantic control. It binds typed semantic
+  symbols to compact ternary hot coordinates while keeping full assertions,
+  role bindings, policy context, and sensitive payloads off the hot path.
