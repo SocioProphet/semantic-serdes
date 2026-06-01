@@ -1,0 +1,52 @@
+{
+  "apiVersion": "security-rpm.socioprophet.dev/v0.1",
+  "kind": "BeaconPatternInstance",
+  "metadata": {
+    "id": "beacon:possible-c2:http-001",
+    "status": "candidate",
+    "name": "Periodic low-volume HTTP check-in"
+  },
+  "event_refs": ["udm:event:http-checkin-001", "udm:event:http-checkin-002", "udm:event:http-checkin-003"],
+  "pattern": {
+    "pattern_type": "suspicious_c2_candidate",
+    "periodicity": {
+      "interval_seconds": 60,
+      "jitter_seconds": 4,
+      "confidence": 0.81
+    },
+    "stable_bindings": [
+      {
+        "role": "principal_process",
+        "value_ref": "process:unknown.exe",
+        "field_path": "principal.process.file.full_path"
+      },
+      {
+        "role": "tls_client_fingerprint",
+        "value_ref": "ja3:rare-demo-hash",
+        "field_path": "network.tls.client.ja3"
+      }
+    ],
+    "target_behavior": "rotating",
+    "payload_size_class": "small_repeated",
+    "control_purpose": "command_and_control"
+  },
+  "candidate_explanations": [
+    {
+      "explanation": "possible_c2_beacon",
+      "score": 0.76,
+      "security_result_category": "NETWORK_COMMAND_AND_CONTROL"
+    },
+    {
+      "explanation": "software_update_checkin",
+      "score": 0.18,
+      "security_result_category": "UNKNOWN_CATEGORY"
+    }
+  ],
+  "selected_explanation": "possible_c2_beacon",
+  "governance": {
+    "preimage_receipt_refs": ["receipt:preimage:http-checkin-window-001"],
+    "linkability_scope": "project_lab_only",
+    "raw_payload_export": "redacted",
+    "high_entropy_fields": ["network.http.user_agent", "network.tls.client.ja3", "target.hostname"]
+  }
+}

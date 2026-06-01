@@ -1,0 +1,39 @@
+{
+  "apiVersion": "security-rpm.socioprophet.dev/v0.1",
+  "kind": "OntologyLinkingCandidate",
+  "metadata": {
+    "id": "ontology-link:tls-client-fingerprint-001",
+    "status": "requires_review",
+    "parser_id": "parser:intercept-protocol-demo:v0"
+  },
+  "source_field": {
+    "raw_name": "client_fingerprint",
+    "source_context": "TLS dissector output from intercepted network session",
+    "observed_values": ["ja3:rare-demo-hash"],
+    "neighbor_fields": ["tls_version", "cipher", "server_name", "supported_ciphers"]
+  },
+  "candidate_mappings": [
+    {
+      "ontology_field": "network.tls.client.ja3",
+      "score": 0.86,
+      "target_system": "udm",
+      "rationale": "Neighbor fields match TLS ClientHello feature family and value has JA3-like fingerprint semantics."
+    },
+    {
+      "ontology_field": "principal.asset.product_object_id",
+      "score": 0.19,
+      "target_system": "udm",
+      "rationale": "Field is stable but lacks asset-management namespace and is derived from TLS handshake rather than inventory."
+    }
+  ],
+  "decision": {
+    "state": "require_review",
+    "selected_mapping": "network.tls.client.ja3",
+    "review_reason": "High-entropy fingerprint fields require linkability-scope classification before parser promotion."
+  },
+  "evidence": {
+    "preimage_refs": ["span:tls-clienthello:demo-001"],
+    "lossiness_profile": "Derived from TLS ClientHello; raw packet retained locally, exported value is fingerprint only.",
+    "examples": ["client_fingerprint=ja3:rare-demo-hash"]
+  }
+}

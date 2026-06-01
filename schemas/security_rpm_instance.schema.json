@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.dev/schemas/semantic-serdes/security_rpm_instance.schema.json",
+  "title": "SecurityRPMInstance",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "source_window", "symbol_dictionary", "reasoning", "governance"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": {"const": "security-rpm.socioprophet.dev/v0.1"},
+    "kind": {"const": "SecurityRPMInstance"},
+    "metadata": {
+      "type": "object",
+      "required": ["id", "name", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^security-rpm:"},
+        "name": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["draft", "observed", "candidate", "validated", "rejected"]},
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "source_window": {
+      "type": "object",
+      "required": ["context_event_refs", "candidate_refs", "attribute_families"],
+      "additionalProperties": false,
+      "properties": {
+        "context_event_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "candidate_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "attribute_families": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "event_type",
+              "principal",
+              "target",
+              "src",
+              "observer",
+              "intermediary",
+              "protocol",
+              "tls_state",
+              "payload_size",
+              "time_delta",
+              "security_result",
+              "control_token",
+              "preimage",
+              "linkability"
+            ]
+          }
+        }
+      }
+    },
+    "symbol_dictionary": {
+      "type": "object",
+      "required": ["version", "role_bindings"],
+      "additionalProperties": false,
+      "properties": {
+        "version": {"type": "string", "minLength": 1},
+        "role_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["role", "value_ref"],
+            "additionalProperties": false,
+            "properties": {
+              "role": {"type": "string", "minLength": 1},
+              "value_ref": {"type": "string", "minLength": 1},
+              "field_path": {"type": "string"},
+              "element_type": {
+                "type": "string",
+                "enum": ["content", "identifier", "state_transition", "control", "execution", "policy", "fingerprint", "evidence", "unknown"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "reasoning": {
+      "type": "object",
+      "required": ["rule_families", "rule_beliefs", "candidate_scores", "selected_candidate"],
+      "additionalProperties": false,
+      "properties": {
+        "rule_families": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "constant",
+              "progression",
+              "arithmetic",
+              "logical_and_or_xor",
+              "consistent_union",
+              "rotation",
+              "periodicity",
+              "state_transition",
+              "role_inversion",
+              "fan_out_fan_in",
+              "prevalence_shift"
+            ]
+          }
+        },
+        "rule_beliefs": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "candidate_scores": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["candidate_ref", "score"],
+            "additionalProperties": false,
+            "properties": {
+              "candidate_ref": {"type": "string", "minLength": 1},
+              "score": {"type": "number", "minimum": 0, "maximum": 1},
+              "rationale": {"type": "string"}
+            }
+          }
+        },
+        "selected_candidate": {"type": "string", "minLength": 1},
+        "security_result_category": {"type": "string"},
+        "control_implication": {
+          "type": "string",
+          "enum": ["allow", "block", "quarantine", "challenge", "alert", "inspect", "redact", "local_only", "require_human_approval", "unknown"]
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "required": ["preimage_receipt_refs", "lossiness_profile", "policy_scope", "linkability_scope"],
+      "additionalProperties": false,
+      "properties": {
+        "preimage_receipt_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "lossiness_profile": {"type": "string", "minLength": 1},
+        "policy_scope": {"type": "string", "minLength": 1},
+        "linkability_scope": {
+          "type": "string",
+          "enum": ["none", "event_only", "session", "project_lab_only", "tenant_security_boundary", "global_forbidden"]
+        },
+        "high_entropy_fields": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

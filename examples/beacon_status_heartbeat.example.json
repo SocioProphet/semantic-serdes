@@ -1,0 +1,52 @@
+{
+  "apiVersion": "security-rpm.socioprophet.dev/v0.1",
+  "kind": "BeaconPatternInstance",
+  "metadata": {
+    "id": "beacon:status-heartbeat:managed-agent-001",
+    "status": "validated",
+    "name": "Managed security product heartbeat"
+  },
+  "event_refs": ["udm:event:heartbeat-001", "udm:event:heartbeat-002", "udm:event:heartbeat-003"],
+  "pattern": {
+    "pattern_type": "benign_status_heartbeat",
+    "periodicity": {
+      "interval_seconds": 300,
+      "jitter_seconds": 5,
+      "confidence": 0.93
+    },
+    "stable_bindings": [
+      {
+        "role": "event_type",
+        "value_ref": "STATUS_HEARTBEAT",
+        "field_path": "metadata.event_type"
+      },
+      {
+        "role": "principal_asset",
+        "value_ref": "asset:managed-endpoint-7",
+        "field_path": "principal.asset_id"
+      }
+    ],
+    "target_behavior": "stable",
+    "payload_size_class": "small_repeated",
+    "control_purpose": "heartbeat"
+  },
+  "candidate_explanations": [
+    {
+      "explanation": "managed_status_heartbeat",
+      "score": 0.94,
+      "security_result_category": "UNKNOWN_CATEGORY"
+    },
+    {
+      "explanation": "possible_c2_beacon",
+      "score": 0.04,
+      "security_result_category": "NETWORK_COMMAND_AND_CONTROL"
+    }
+  ],
+  "selected_explanation": "managed_status_heartbeat",
+  "governance": {
+    "preimage_receipt_refs": ["receipt:preimage:heartbeat-001"],
+    "linkability_scope": "tenant_security_boundary",
+    "raw_payload_export": "forbidden",
+    "high_entropy_fields": ["principal.asset_id"]
+  }
+}

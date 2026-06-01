@@ -1,0 +1,74 @@
+{
+  "apiVersion": "security-rpm.socioprophet.dev/v0.1",
+  "kind": "SecurityRPMInstance",
+  "metadata": {
+    "id": "security-rpm:starttls-upgrade:demo-001",
+    "name": "STARTTLS upgrade stream",
+    "status": "candidate",
+    "created_at": "2026-05-08T00:00:00Z"
+  },
+  "source_window": {
+    "context_event_refs": [
+      "udm:event:smtp-ehlo-001",
+      "udm:event:smtp-starttls-002",
+      "udm:event:tls-established-003"
+    ],
+    "candidate_refs": [
+      "candidate:valid-starttls-upgrade",
+      "candidate:unexpected-tls-upgrade"
+    ],
+    "attribute_families": ["event_type", "protocol", "tls_state", "control_token", "preimage"]
+  },
+  "symbol_dictionary": {
+    "version": "security-symbol-dictionary.v0.1",
+    "role_bindings": [
+      {
+        "role": "event_type",
+        "value_ref": "NETWORK_SMTP",
+        "field_path": "metadata.event_type",
+        "element_type": "policy"
+      },
+      {
+        "role": "control_token",
+        "value_ref": "STARTTLS",
+        "field_path": "network.smtp.command",
+        "element_type": "state_transition"
+      },
+      {
+        "role": "tls_state",
+        "value_ref": "TLS_ESTABLISHED",
+        "field_path": "network.tls.established",
+        "element_type": "control"
+      }
+    ]
+  },
+  "reasoning": {
+    "rule_families": ["state_transition", "constant"],
+    "rule_beliefs": {
+      "state_transition": 0.91,
+      "constant": 0.52
+    },
+    "candidate_scores": [
+      {
+        "candidate_ref": "candidate:valid-starttls-upgrade",
+        "score": 0.84,
+        "rationale": "Observed EHLO, STARTTLS, and established TLS in expected order."
+      },
+      {
+        "candidate_ref": "candidate:unexpected-tls-upgrade",
+        "score": 0.16,
+        "rationale": "No protocol mismatch or unexpected target was observed in this toy window."
+      }
+    ],
+    "selected_candidate": "candidate:valid-starttls-upgrade",
+    "security_result_category": "UNKNOWN_CATEGORY",
+    "control_implication": "allow"
+  },
+  "governance": {
+    "preimage_receipt_refs": ["receipt:preimage:starttls-demo-001"],
+    "lossiness_profile": "Packet timing and retransmission details omitted; protocol-order evidence retained.",
+    "policy_scope": "project_lab_only",
+    "linkability_scope": "project_lab_only",
+    "high_entropy_fields": ["network.tls.client.ja3", "network.tls.server.ja3s"]
+  }
+}
