@@ -1,0 +1,191 @@
+{
+  "ruleset_id": "corpus-filter-rules.academic-papers",
+  "ruleset_version": "0.1",
+  "corpus_domain": "academic_papers",
+  "description": "Filter rules for academic paper corpora before topic modeling (LSA/LDA/LSI). Strips tokens that describe where/when/by-whom an artifact was produced rather than what it is about. Individuals (persons, orgs, products) are routed to the identity layer, not treated as topics.",
+  "rules": [
+    {
+      "rule_id": "DATE_TOKEN_001",
+      "strip_class": "DATE_TOKEN",
+      "reason": "Time is a topic; specific dates are not. '2019', 'dec 2019', 'arxiv 1912' describe when an artifact was produced, which belongs in provenance, not in topic space. Temporal concepts like 'time series', 'sequential', 'duration' are content and remain.",
+      "semantic_layer": "provenance",
+      "action": "route_to_layer",
+      "patterns": ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
+      "regex_patterns": [
+        "\\b(19|20)\\d{2}\\b",
+        "\\b\\d{4}\\.(\\d{4}|\\d{5})\\b",
+        "\\barxiv\\s*\\d{4}\\b",
+        "\\bcs\\.?[a-z]{2,4}\\b"
+      ],
+      "notes": "arXiv category codes (cs.ai, cs.lg) and ID fragments also match here."
+    },
+    {
+      "rule_id": "VENUE_TOKEN_001",
+      "strip_class": "VENUE_TOKEN",
+      "reason": "Publication venue describes where an artifact was published, not what it says. 'iclr', 'neurips', 'acl', 'preprint', 'conference paper', 'published conference' belong in catalog provenance metadata.",
+      "semantic_layer": "provenance",
+      "action": "route_to_layer",
+      "patterns": [
+        "iclr", "neurips", "nips", "icml", "acl", "emnlp", "naacl", "cvpr", "iccv", "eccv",
+        "aaai", "ijcai", "uai", "aistats", "corl", "rss", "icra", "sigir", "kdd", "www",
+        "arxiv", "preprint", "conference paper", "published conference", "published as",
+        "workshop paper", "technical report", "working paper", "journal of", "proceedings of",
+        "transactions on", "letters on"
+      ],
+      "regex_patterns": [],
+      "notes": "Venue names load uniformly across the entire corpus and suppress real signal."
+    },
+    {
+      "rule_id": "PERSON_INDIVIDUAL_001",
+      "strip_class": "PERSON_INDIVIDUAL",
+      "reason": "People are individuals, not topics. A person is an identity node in the graph that has a topic vector — they are not a dimension of the topic space. Author names should be represented as CSKG nodes with authored-by edges to artifacts, not as content features.",
+      "semantic_layer": "identity",
+      "action": "route_to_layer",
+      "patterns": [],
+      "regex_patterns": [
+        "\\bet al\\.?\\b",
+        "\\b[A-Z][a-z]+(,?\\s+[A-Z]\\.?)+(\\s+[A-Z][a-z]+)?\\b"
+      ],
+      "notes": "Author name detection via NER is preferred over regex. The regex here catches 'Vaswani, A.' style patterns. The catalog's authors field is the authoritative source; strip from content only."
+    },
+    {
+      "rule_id": "ORG_INDIVIDUAL_001",
+      "strip_class": "ORG_INDIVIDUAL",
+      "reason": "Organizations are individuals, not topics. 'Google', 'DeepMind', 'OpenAI', 'MIT', 'Stanford' are entity nodes. Their relationship to artifacts (produced-by, funded-by, affiliated-with) is a graph edge, not a topic dimension.",
+      "semantic_layer": "identity",
+      "action": "route_to_layer",
+      "patterns": [
+        "google", "deepmind", "openai", "anthropic", "meta", "facebook", "microsoft",
+        "amazon", "apple", "nvidia", "ibm", "hugging face", "huggingface",
+        "mit", "stanford", "cmu", "carnegie mellon", "oxford", "cambridge", "berkeley",
+        "eth zurich", "inria", "mila", "vector institute", "allen institute", "ai2"
+      ],
+      "regex_patterns": [],
+      "notes": "This list is a seed. NER-based organization detection is preferred at scale."
+    },
+    {
+      "rule_id": "PRODUCT_INDIVIDUAL_001",
+      "strip_class": "PRODUCT_INDIVIDUAL",
+      "reason": "Named models and products are individuals. 'GPT-4', 'BERT', 'LLaMA', 'Gemini' are specific artifact instances. The concepts they embody (language modeling, transformer architecture) are content; the product names are identity handles.",
+      "semantic_layer": "identity",
+      "action": "route_to_layer",
+      "patterns": [
+        "gpt-4", "gpt-3", "gpt4", "gpt3", "chatgpt", "gpt",
+        "bert", "roberta", "t5", "bart", "xlnet", "albert",
+        "llama", "llama2", "mistral", "gemini", "palm", "claude",
+        "dall-e", "dalle", "stable diffusion", "midjourney",
+        "pytorch", "tensorflow", "jax", "keras", "sklearn", "scikit-learn",
+        "huggingface", "transformers library", "langchain"
+      ],
+      "regex_patterns": [
+        "\\bgpt-?\\d+\\b",
+        "\\bllama-?\\d*\\b"
+      ],
+      "notes": "'transformer' without version/brand qualifier is a concept, keep it. 'Transformer architecture' is content."
+    },
+    {
+      "rule_id": "BOILERPLATE_ACADEMIC_001",
+      "strip_class": "BOILERPLATE_ACADEMIC",
+      "reason": "Academic boilerplate appears uniformly across the corpus and carries no discriminating semantic content. It describes the rhetorical act of writing a paper, not what the paper is about.",
+      "semantic_layer": "discard",
+      "action": "strip",
+      "patterns": [
+        "in this paper", "in this work", "we propose", "we present", "we introduce",
+        "we show", "we demonstrate", "we study", "we investigate", "we evaluate",
+        "in this study", "this paper", "this work", "this article",
+        "state of the art", "state-of-the-art", "sota",
+        "outperforms", "outperform", "significantly", "novel", "novelty",
+        "we believe", "to the best of our knowledge", "as far as we know",
+        "extensive experiments", "empirically", "ablation study",
+        "baseline", "baselines", "evaluation", "experiments show"
+      ],
+      "regex_patterns": [],
+      "notes": "These terms are true of every paper in the corpus and therefore informative about none of them."
+    },
+    {
+      "rule_id": "STRUCTURAL_MARKER_001",
+      "strip_class": "STRUCTURAL_MARKER",
+      "reason": "Document structure terms describe the format of an artifact, not its content. Every paper has an abstract, introduction, and conclusion — these section labels add no discriminating signal.",
+      "semantic_layer": "discard",
+      "action": "strip",
+      "patterns": [
+        "abstract", "introduction", "conclusion", "conclusions",
+        "related work", "background", "methodology", "methods",
+        "discussion", "acknowledgements", "acknowledgments", "references",
+        "appendix", "supplementary", "figure", "table", "equation",
+        "section", "subsection", "chapter", "paragraph"
+      ],
+      "regex_patterns": [],
+      "notes": "Only strip the bare structural terms, not compound phrases like 'introduction to reinforcement learning'."
+    },
+    {
+      "rule_id": "VERSION_TOKEN_001",
+      "strip_class": "VERSION_TOKEN",
+      "reason": "Version strings and patch identifiers describe the administrative lifecycle of an artifact, not its content.",
+      "semantic_layer": "provenance",
+      "action": "route_to_layer",
+      "patterns": ["v0", "v1", "v2", "v3", "v4", "v0.1", "v1.0", "v2.0"],
+      "regex_patterns": [
+        "\\bv\\d+(\\.\\d+)*\\b",
+        "\\bversion\\s+\\d+\\b"
+      ],
+      "notes": ""
+    },
+    {
+      "rule_id": "BARE_NUMERIC_001",
+      "strip_class": "BARE_NUMERIC",
+      "reason": "Bare numbers have no semantic content. Scale and quantity expressed as concepts ('large-scale', 'billion-parameter', 'high-dimensional') are content and remain. Isolated numbers do not.",
+      "semantic_layer": "discard",
+      "action": "strip",
+      "patterns": [],
+      "regex_patterns": [
+        "\\b\\d+(\\.\\d+)?\\b"
+      ],
+      "notes": "Apply after date/version stripping to avoid double-processing. Preserves compound terms containing numbers as substrings."
+    },
+    {
+      "rule_id": "TOOL_PROVENANCE_001",
+      "strip_class": "TOOL_PROVENANCE",
+      "reason": "Implementation tool names describe how a result was produced, not what it means. 'Python 3.8', 'CUDA 11', 'A100 GPU' are provenance, not content.",
+      "semantic_layer": "provenance",
+      "action": "route_to_layer",
+      "patterns": [
+        "python", "cuda", "cpu", "gpu", "a100", "v100", "tpu",
+        "github", "pip", "conda", "docker", "kubernetes",
+        "linux", "ubuntu", "macos", "windows",
+        "aws", "gcp", "azure", "s3", "ec2"
+      ],
+      "regex_patterns": [],
+      "notes": "Only strip when used as standalone tokens. 'CUDA-accelerated training' — strip 'cuda'; 'parallel training on GPU clusters' — 'parallel' is content, strip 'gpu'."
+    },
+    {
+      "rule_id": "EVALUATIVE_LANGUAGE_001",
+      "strip_class": "EVALUATIVE_LANGUAGE",
+      "reason": "Comparative and evaluative language is uniform academic rhetoric. It describes the claimed quality of a contribution, not the domain or content of the work.",
+      "semantic_layer": "discard",
+      "action": "strip",
+      "patterns": [
+        "efficient", "effective", "robust", "scalable", "flexible",
+        "improved", "improvement", "better", "best", "superior",
+        "competitive", "comparable", "strong", "stronger",
+        "promising", "significant", "substantially", "considerably",
+        "accuracy", "performance", "results", "achieve", "achieves"
+      ],
+      "regex_patterns": [],
+      "notes": "Every paper claims these. Strip as topic model noise; they may be useful for sentiment/quality classifiers elsewhere."
+    }
+  ],
+  "provenance": {
+    "source_refs": [
+      "session:2026-06-09:corpus-filter-rules-design",
+      "graphbrain-contract:corpus_vectorizer.py:run_id:4b146f93"
+    ],
+    "created_at": "2026-06-09T00:00:00Z",
+    "authors": ["mdheller"]
+  },
+  "governance": {
+    "admissibility_tier": "GOVERNED",
+    "review_status": "APPROVED",
+    "policy_refs": []
+  }
+}

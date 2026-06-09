@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.ai/schemas/semantic-serdes/corpus-filter-rules.schema.v0.1.json",
+  "title": "CorpusFilterRules",
+  "description": "Governed ruleset defining what is stripped from document text before topic modeling. Each rule identifies a token class that describes the artifact (provenance, administration, identity) rather than the content. Stripped tokens are routed to the semantic layer they actually belong to, not discarded.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ruleset_id",
+    "ruleset_version",
+    "corpus_domain",
+    "rules",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "ruleset_id": { "type": "string", "minLength": 1 },
+    "ruleset_version": { "type": "string", "minLength": 1 },
+    "corpus_domain": {
+      "type": "string",
+      "description": "Domain this ruleset is designed for, e.g. academic_papers, operational_artifacts, legal_documents"
+    },
+    "description": { "type": "string" },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/filter_rule" }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source_refs", "created_at"],
+      "additionalProperties": false,
+      "properties": {
+        "source_refs": { "type": "array", "items": { "type": "string" } },
+        "created_at": { "type": "string", "format": "date-time" },
+        "authors": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "required": ["admissibility_tier", "review_status"],
+      "additionalProperties": false,
+      "properties": {
+        "admissibility_tier": {
+          "enum": ["RAW", "VALIDATED", "GOVERNED", "CANONICAL"]
+        },
+        "review_status": {
+          "enum": ["NOT_REQUIRED", "REQUIRED", "PENDING", "APPROVED", "REJECTED", "ESCALATED"]
+        },
+        "policy_refs": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "filter_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule_id", "strip_class", "reason", "semantic_layer", "action"],
+      "properties": {
+        "rule_id": { "type": "string", "minLength": 1 },
+        "strip_class": {
+          "enum": [
+            "DATE_TOKEN",
+            "VENUE_TOKEN",
+            "PERSON_INDIVIDUAL",
+            "ORG_INDIVIDUAL",
+            "PRODUCT_INDIVIDUAL",
+            "BOILERPLATE_ACADEMIC",
+            "STRUCTURAL_MARKER",
+            "VERSION_TOKEN",
+            "BARE_NUMERIC",
+            "TOOL_PROVENANCE",
+            "URL_OR_ID",
+            "EVALUATIVE_LANGUAGE"
+          ],
+          "description": "The class of token being stripped. Classes ending in _INDIVIDUAL mark entities (not topics). All others mark administrative or structural noise."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Human-readable rationale. Must answer: why does this class not belong in topic space?"
+        },
+        "semantic_layer": {
+          "enum": [
+            "provenance",
+            "identity",
+            "administrative",
+            "discard"
+          ],
+          "description": "Where stripped tokens belong instead. provenance=citation/lineage layer, identity=CSKG individual node, administrative=catalog metadata, discard=no semantic value anywhere."
+        },
+        "action": {
+          "enum": ["strip", "route_to_layer", "normalize_then_strip"],
+          "description": "strip=remove entirely; route_to_layer=remove from content but record in semantic_layer; normalize_then_strip=clean and record before removing."
+        },
+        "patterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Exact terms, prefix patterns, or regex strings to match. Evaluated case-insensitively."
+        },
+        "regex_patterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Full regex patterns for more complex matching (e.g. year detection, arXiv IDs)."
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
